@@ -6,7 +6,7 @@ import lexico.Token;
 public class MainClass {
     public static void main(String[] args) {
         try {
-            LexicalScanner sc = new LexicalScanner("Input.txt");
+            LexicalScanner sc = new LexicalScanner("LexicalAnalyzer/Input.txt");
             Token token = null;
             do {
                 token = sc.nextToken();
@@ -17,7 +17,7 @@ public class MainClass {
 
             System.out.println("Compilado");
         } catch (Exception ex) {
-            System.out.println("Erro!");
+            System.out.println(ex);
         }
     }
 }

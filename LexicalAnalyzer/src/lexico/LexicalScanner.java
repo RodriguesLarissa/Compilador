@@ -15,12 +15,15 @@ public class LexicalScanner {
         try {
             // line = 1;
             // column = 0;
+            pos = 0;
             String txtConteudo;
             txtConteudo = new String(Files.readAllBytes(Paths.get(filename)), StandardCharsets.UTF_8);
-            System.out.println("DEBUG------------");
-            System.out.println(txtConteudo);
-            System.out.println("------------");
             content = txtConteudo.toCharArray();
+            System.out.println("DEBUG------------");
+            System.out.println(content);
+            System.out.println("Tamanho: " + content.length);
+            System.out.println("------------");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,7 +42,10 @@ public class LexicalScanner {
         while (true) {
             currentChar = nextChar();
             // column++;
-
+            // System.out.println("--------------------------");
+            // System.out.println("Posição: " + (pos - 1));
+            // System.out.println("Char: " + currentChar);
+            // System.out.println("Estado: " + estado);
             switch (estado) {
                 case 0:
                     if (isSpace(currentChar)) {
@@ -68,7 +74,7 @@ public class LexicalScanner {
                         token.setText(term);
                         return token;
                     } else if (isPunctuation(currentChar)) {
-                        // POntuação
+                        // Pontuação
                         term += currentChar;
                         token = new Token(Token.TK_PONCTUATION);
                         token.setText(term);
@@ -81,6 +87,7 @@ public class LexicalScanner {
                         // Erro - caracter não reconhecido
                         throw new Exception("Caracter não reconhecido");
                     }
+                    break;
                 case 1: // Ientificador
                     if (isDigit(currentChar) || isChar(currentChar)) {
                         term += currentChar;
@@ -99,6 +106,7 @@ public class LexicalScanner {
                         throw new Exception(
                                 "Indentificador mal formado, esperado um dígito ou caracter, recebido: " + currentChar);
                     }
+                    break;
                 case 3: // Número
                     if (isDigit(currentChar)) {
                         term += currentChar;
@@ -120,10 +128,19 @@ public class LexicalScanner {
                         throw new Exception("Número mal formado, esperado um dígito ou separador de decimal, recebido: "
                                 + currentChar);
                     }
+                    break;
                 case 4: // Decimal
                     if (isDigit(currentChar)) {
                         term += currentChar;
-                        estado = 4;
+                        estado = 5;
+                    } else {
+                        // Erro - decimal mal formado
+                        throw new Exception("Decimal mal formado, esperado um dígito, recebido: " + currentChar);
+                    }
+                case 5:
+                    if (isDigit(currentChar)) {
+                        term += currentChar;
+                        estado = 5;
                     } else if (isChar(currentChar) || isOperator(currentChar) || isExprSinals(currentChar)
                             || isPunctuation(currentChar) || isSpace(currentChar) || isEOF(currentChar)
                             || isTwoDots(currentChar) || isQuoteMark(currentChar) || isDecimalSeparator(currentChar)) {
@@ -137,6 +154,7 @@ public class LexicalScanner {
                         // Erro - decimal mal formado (esperado digito)
                         throw new Exception("Decimal mal formado, esperado um dígito, recebido: " + currentChar);
                     }
+                    break;
                 case 6: // Atribuição
                     if (isEqualChar(currentChar)) {
                         term += currentChar;
@@ -176,6 +194,7 @@ public class LexicalScanner {
                         throw new Exception("Texto mal formado, esperado um dígito ou caracter ou espaço, recebido: "
                                 + currentChar);
                     }
+                    break;
                 case 15: // Continuação do texto
                     if (isDigit(currentChar) || isChar(currentChar) || isWordSpace(currentChar)) {
                         term += currentChar;
@@ -191,6 +210,7 @@ public class LexicalScanner {
                                 "Texto mal formado, esperado um dígito ou caracter ou espaço ou aspas, recebido: "
                                         + currentChar);
                     }
+                    break;
                 default:
                     // Erro - mal formação da máquina de estado
                     throw new Exception("Máquina de estado mal formada, estado: " + estado);

@@ -45,6 +45,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token [type=" + TK_LABELS[type] + ", text=" + text + "]";
+        return "Token [type = " + TK_LABELS[type] + ", text = '" + text + "']";
     }
 }
