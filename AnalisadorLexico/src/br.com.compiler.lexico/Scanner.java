@@ -2,6 +2,10 @@ package br.com.compiler.lexico;
 
 public class Scanner {
     private char[] content;
+    private int estado;
+    private int    pos;
+    private int    line;
+    private int    column;
 
     public Scanner(String filename){
         try {
@@ -15,6 +19,39 @@ public class Scanner {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public Token nextToken(){
+        char currentChar;
+        estado = 0;
+        Token token;
+        String term="";
+
+        if(isEOF()){
+            return null;
+        }
+
+        while(true){
+            currentChar = nextChar();
+            column++;
+
+            switch(estado){
+                case 0:
+                    if (isSpace(currentChar)) {
+                        estado = 0;
+                    }
+                    else if isChar(currentChar){
+                        term += currentChar;
+                        estado = 1;
+                    }
+                    else if (isDigit(currentChar)){
+                        term += currentChar;
+                        estado = 3;
+                    }
+                    
+            }
+        }
+
     }
 
     private boolean isDigit(char c) {
@@ -54,9 +91,5 @@ public class Scanner {
     private void back() {
         pos--;
         column--;
-    }
-
-    private boolean isEOF(char c) {
-        return c == '\0';
     }
 }
