@@ -1,27 +1,21 @@
 package lexico;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class LexicalScanner {
     private char[] content;
-    private int estado;
     private int pos;
-    // private int line;
-    // private int column;
 
     public LexicalScanner(String filename) {
         try {
-            // line = 1;
-            // column = 0;
             pos = 0;
-            String txtConteudo;
-            txtConteudo = new String(Files.readAllBytes(Paths.get(filename)), StandardCharsets.UTF_8);
-            content = txtConteudo.toCharArray();
+            String txtContent;
+            txtContent = Files.readString(Paths.get(filename));
+            content = txtContent.toCharArray();
             System.out.println("DEBUG------------");
             System.out.println(content);
-            System.out.println("Tamanho: " + content.length);
+            System.out.println("Length: " + content.length);
             System.out.println("------------");
 
         } catch (Exception e) {
@@ -31,9 +25,9 @@ public class LexicalScanner {
 
     public Token nextToken() throws Exception {
         char currentChar;
-        estado = 0;
+        int state = 0;
         Token token;
-        String term = "";
+        StringBuilder term = new StringBuilder();
 
         if (isEOF()) {
             return null;
@@ -41,57 +35,52 @@ public class LexicalScanner {
 
         while (true) {
             currentChar = nextChar();
-            // column++;
-            // System.out.println("--------------------------");
-            // System.out.println("Posição: " + (pos - 1));
-            // System.out.println("Char: " + currentChar);
-            // System.out.println("Estado: " + estado);
-            switch (estado) {
+            switch (state) {
                 case 0:
                     if (isSpace(currentChar)) {
-                        // Ignorando espaços, tabulações e quebra linhas
-                        estado = 0;
+                        //Ignoring spaces, tabs and line breaks
+                        break;
                     } else if (isChar(currentChar)) {
-                        // Indentificador
-                        term += currentChar;
-                        estado = 1;
+                        // Identifier
+                        term.append(currentChar);
+                        state = 1;
                     } else if (isDigit(currentChar)) {
-                        // Numero
-                        term += currentChar;
-                        estado = 3;
+                        // Number
+                        term.append(currentChar);
+                        state = 3;
                     } else if (isTwoDots(currentChar)) {
-                        // Atribuição
-                        term += currentChar;
-                        estado = 6;
+                        // Assignment
+                        term.append(currentChar);
+                        state = 6;
                     } else if (isOperator(currentChar)) {
-                        // Operadores
-                        term += currentChar;
-                        estado = 9;
+                        // Operators
+                        term.append(currentChar);
+                        state = 9;
                     } else if (isExprSinals(currentChar)) {
-                        // Sinais de expressão
-                        term += currentChar;
+                        // Expression signs
+                        term.append(currentChar);
                         token = new Token(Token.TK_EXPR_SINAL);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else if (isPunctuation(currentChar)) {
-                        // Pontuação
-                        term += currentChar;
-                        token = new Token(Token.TK_PONCTUATION);
-                        token.setText(term);
+                        // Punctuation
+                        term.append(currentChar);
+                        token = new Token(Token.TK_PUNCTUATION);
+                        token.setText(term.toString());
                         return token;
                     } else if (isQuoteMark(currentChar)) {
-                        // Texto
-                        term += currentChar;
-                        estado = 14;
+                        // Text
+                        term.append(currentChar);
+                        state = 14;
                     } else {
-                        // Erro - caracter não reconhecido
-                        throw new Exception("Caracter não reconhecido");
+                        // Error - unrecognized character
+                        throw new Exception("Unrecognized character");
                     }
                     break;
-                case 1: // Ientificador
+                case 1: // Identifier
                     if (isDigit(currentChar) || isChar(currentChar)) {
-                        term += currentChar;
-                        estado = 1;
+                        term.append(currentChar);
+                        break;
                     } else if (isOperator(currentChar) || isExprSinals(currentChar) || isPunctuation(currentChar)
                             || isSpace(currentChar) || isEOF(currentChar) || isTwoDots(currentChar)
                             || isQuoteMark(currentChar) || isDecimalSeparator(currentChar)) {
@@ -99,21 +88,20 @@ public class LexicalScanner {
                             back();
                         }
                         token = new Token(Token.TK_IDENTIFIER);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else {
-                        // Erro - identificador mal formado (esperado digito ou char)
+                        // Error - malformed identifier (expected digit or char)
                         throw new Exception(
-                                "Indentificador mal formado, esperado um dígito ou caracter, recebido: " + currentChar);
+                                "Malformed identifier, expected digit or char, received: " + currentChar);
                     }
-                    break;
-                case 3: // Número
+                case 3: // Number
                     if (isDigit(currentChar)) {
-                        term += currentChar;
-                        estado = 3;
+                        term.append(currentChar);
+                        break;
                     } else if (isDecimalSeparator(currentChar)) {
-                        term += currentChar;
-                        estado = 4;
+                        term.append(currentChar);
+                        state = 4;
                     } else if (isChar(currentChar) || isOperator(currentChar) || isExprSinals(currentChar)
                             || isPunctuation(currentChar) || isSpace(currentChar) || isEOF(currentChar)
                             || isTwoDots(currentChar) || isQuoteMark(currentChar)) {
@@ -121,26 +109,26 @@ public class LexicalScanner {
                             back();
                         }
                         token = new Token(Token.TK_NUMBER);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else {
-                        // Erro - número inteiro mal formado (esperado digito)
-                        throw new Exception("Número mal formado, esperado um dígito ou separador de decimal, recebido: "
+                        // Error - malformed integer (expected digit)
+                        throw new Exception("Malformed number, expected a digit or decimal separator, received: "
                                 + currentChar);
                     }
                     break;
                 case 4: // Decimal
                     if (isDigit(currentChar)) {
-                        term += currentChar;
-                        estado = 5;
+                        term.append(currentChar);
+                        state = 5;
                     } else {
-                        // Erro - decimal mal formado
-                        throw new Exception("Decimal mal formado, esperado um dígito, recebido: " + currentChar);
+                        // Error - malformed decimal
+                        throw new Exception("\n" + "Malformed decimal, expected one digit, received: " + currentChar);
                     }
                 case 5:
                     if (isDigit(currentChar)) {
-                        term += currentChar;
-                        estado = 5;
+                        term.append(currentChar);
+                        break;
                     } else if (isChar(currentChar) || isOperator(currentChar) || isExprSinals(currentChar)
                             || isPunctuation(currentChar) || isSpace(currentChar) || isEOF(currentChar)
                             || isTwoDots(currentChar) || isQuoteMark(currentChar) || isDecimalSeparator(currentChar)) {
@@ -148,28 +136,27 @@ public class LexicalScanner {
                             back();
                         }
                         token = new Token(Token.TK_DOUBLE);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else {
-                        // Erro - decimal mal formado (esperado digito)
-                        throw new Exception("Decimal mal formado, esperado um dígito, recebido: " + currentChar);
+                        // Error - malformed decimal (expected digit)
+                        throw new Exception("\n" + "Malformed decimal, expected digit, received: " + currentChar);
                     }
-                    break;
-                case 6: // Atribuição
+                case 6: // Assignment
                     if (isEqualChar(currentChar)) {
-                        term += currentChar;
+                        term.append(currentChar);
                         token = new Token(Token.TK_ASSIGN);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else {
-                        // Erro - má formação de atribuição (esperado '=')
-                        throw new Exception("Atribuidor mal formado, esperado '=', recebido: " + currentChar);
+                        // Error - assignment malformation (expected '=')
+                        throw new Exception("Malformed attributor, expected '=', received: " + currentChar);
                     }
-                case 9: // Operador relacional
+                case 9: // Relational operator
                     if (isEqualChar(currentChar)) {
-                        term += currentChar;
+                        term.append(currentChar);
                         token = new Token(Token.TK_OPERATOR);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else if (isChar(currentChar) || isDigit(currentChar) || isOperator(currentChar)
                             || isExprSinals(currentChar) || isPunctuation(currentChar) || isSpace(currentChar)
@@ -179,41 +166,40 @@ public class LexicalScanner {
                             back();
                         }
                         token = new Token(Token.TK_OPERATOR);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else {
-                        // Erro - má formação de operador relacional (esperando '=')
-                        throw new Exception("Operador mal formado, esperado '=', recebido: " + currentChar);
+                        // Error - relational operator malformation
+                        throw new Exception("\n" + "Malformed operator, received: " + currentChar);
                     }
-                case 14: // Texto
+                case 14: // Text
                     if (isDigit(currentChar) || isChar(currentChar) || isWordSpace(currentChar)) {
-                        term += currentChar;
-                        estado = 15;
+                        term.append(currentChar);
+                        state = 15;
                     } else {
-                        // Erro - má formação do texto
-                        throw new Exception("Texto mal formado, esperado um dígito ou caracter ou espaço, recebido: "
+                        // Error - bad text formation
+                        throw new Exception("Malformed text, expected a digit or character or space, received: "
                                 + currentChar);
                     }
                     break;
-                case 15: // Continuação do texto
+                case 15: // Text Continuation
                     if (isDigit(currentChar) || isChar(currentChar) || isWordSpace(currentChar)) {
-                        term += currentChar;
-                        estado = 15;
+                        term.append(currentChar);
+                        break;
                     } else if (isQuoteMark(currentChar)) {
-                        term += currentChar;
+                        term.append(currentChar);
                         token = new Token(Token.TK_TEXT);
-                        token.setText(term);
+                        token.setText(term.toString());
                         return token;
                     } else {
-                        // Erro - má formação do texto
+                        // Error - bad text formation
                         throw new Exception(
-                                "Texto mal formado, esperado um dígito ou caracter ou espaço ou aspas, recebido: "
+                                "Malformed text, expected a digit or character or space or quotes, received: "
                                         + currentChar);
                     }
-                    break;
                 default:
-                    // Erro - mal formação da máquina de estado
-                    throw new Exception("Máquina de estado mal formada, estado: " + estado);
+                    // Error - malformation of the state machine
+                    throw new Exception("\n" + "Malformed state machine, state: " + state);
 
             }
         }
@@ -241,10 +227,6 @@ public class LexicalScanner {
     }
 
     private boolean isSpace(char c) {
-        // if (c == '\n' || c== '\r') {
-        // line++;
-        // column=0;
-        // }
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
     }
 
