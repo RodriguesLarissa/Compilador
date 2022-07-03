@@ -119,7 +119,7 @@ public class LexicalScanner {
                     break;
                 case 4: // Decimal
                     if (isDigit(currentChar)) {
-                        term.append(currentChar);
+                        // term.append(currentChar);
                         state = 5;
                     } else {
                         // Error - malformed decimal
