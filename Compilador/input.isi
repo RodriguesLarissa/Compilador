@@ -1,5 +1,4 @@
 programa
-
 declare int a,b,c,d.
 //declare string e,f.
 escreva("Programa Teste").
@@ -19,7 +18,19 @@ se (a<b) entao {
     c:=a-b.
 }
 
-//declare double g.
+//Erros que podem ser gerados
+
+//escreava (y). //y não declarada!
+
+// c:= x + b.   // x não declarada!
+
+// declare a.   //a já declarada!
+
+//a:="A".       //a tipo int recebeu String! O mesmo ocorre para double
+
+
+declare String g.
+g := "122".
 escreva ("C e igual a ").
 escreva(c).
 d:=c*a+b.

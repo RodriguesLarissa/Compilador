@@ -3,6 +3,7 @@ package main;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import exceptions.SemanticException;
 import parser.IsiLangLexer;
 import parser.IsiLangParser;
 
@@ -25,6 +26,8 @@ public class MainClass {
       parser.prog();
 
       System.out.println("Compilation Successful");
+    } catch (SemanticException ex) {
+      System.err.println("Semantic error: " + ex.getMessage());
     } catch (Exception ex) {
       System.err.println("ERROR " + ex.getMessage());
     }

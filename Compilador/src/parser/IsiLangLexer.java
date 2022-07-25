@@ -1,5 +1,9 @@
 // Generated from IsiLang.g4 by ANTLR 4.10.1
 package parser;
+
+	import structures.*;
+	import exceptions.*;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -41,7 +45,7 @@ public class IsiLangLexer extends Lexer {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'programa'", "'fimprog'", "'declare'", "','", "'int'", "'string'", 
+			null, "'programa'", "'fimprog'", "'declare'", "','", "'int'", "'String'", 
 			"'double'", "'leia'", "'escreva'", "'se'", "'entao'", "'senao'", "'enquanto'", 
 			null, null, null, null, "'('", "')'", "'{'", "'}'", "'.'", null, "'+'", 
 			"'-'", "'*'", "'/'", "'%'", "':='"
@@ -88,6 +92,43 @@ public class IsiLangLexer extends Lexer {
 	public Vocabulary getVocabulary() {
 		return VOCABULARY;
 	}
+
+
+		private int _type;
+		private String _name;
+		private String _value;
+		private VariableTable variableTable = new VariableTable();
+		private Variable v;
+
+		public void verifyIdAlreadyDeclared() { 
+			if(variableTable.exists(_name)) { 
+				throw new SemanticException("Variable '" + _name + "' already declared");
+			}
+		}
+
+		public void verifyIdNotDeclared() { 
+			if(!variableTable.exists(_name)) { 
+				throw new SemanticException("Variable '" + _name + "' not declared");
+			}
+		}
+
+		public void verifyIdDeclaration() {
+			verifyIdAlreadyDeclared();
+			v = new Variable(_name, _type, _value);
+			variableTable.add(v);
+		}
+		
+		public void verifyIsStringAllowed() {
+			if (_type != Variable.STRING) {
+				throw new SemanticException("Expected " + v.getTypeText() + " value, recieved String '" + _value + "'");
+			}
+		}
+
+		public void setValue() {		
+			v = variableTable.getVariable(_name);		
+			v.setValue(_value);
+		}
+
 
 
 	public IsiLangLexer(CharStream input) {
@@ -194,7 +235,7 @@ public class IsiLangLexer extends Lexer {
 		"\u0000QR\u0005l\u0000\u0000RS\u0005a\u0000\u0000ST\u0005r\u0000\u0000"+
 		"TU\u0005e\u0000\u0000U\u0006\u0001\u0000\u0000\u0000VW\u0005,\u0000\u0000"+
 		"W\b\u0001\u0000\u0000\u0000XY\u0005i\u0000\u0000YZ\u0005n\u0000\u0000"+
-		"Z[\u0005t\u0000\u0000[\n\u0001\u0000\u0000\u0000\\]\u0005s\u0000\u0000"+
+		"Z[\u0005t\u0000\u0000[\n\u0001\u0000\u0000\u0000\\]\u0005S\u0000\u0000"+
 		"]^\u0005t\u0000\u0000^_\u0005r\u0000\u0000_`\u0005i\u0000\u0000`a\u0005"+
 		"n\u0000\u0000ab\u0005g\u0000\u0000b\f\u0001\u0000\u0000\u0000cd\u0005"+
 		"d\u0000\u0000de\u0005o\u0000\u0000ef\u0005u\u0000\u0000fg\u0005b\u0000"+

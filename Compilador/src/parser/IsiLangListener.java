@@ -1,5 +1,9 @@
 // Generated from IsiLang.g4 by ANTLR 4.10.1
 package parser;
+
+	import structures.*;
+	import exceptions.*;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

@@ -30,6 +30,19 @@ public class Variable extends Symbol {
         this.value = value;
     }
 
+    public String getTypeText() {
+        switch (this.type) {
+            case 0:
+                return "int";
+            case 1:
+                return "double";
+            case 2:
+                return "String";
+            default:
+                return "not recognized type";
+        }
+    }
+
     @Override
     public String toString() {
         return "Variable [name=" + name + ",type=" + type + ", value=" + value + "]";

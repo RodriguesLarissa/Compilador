@@ -1,4 +1,8 @@
 // Generated from /home/yudi/Documentos/COMP/Compilador/Compilador/IsiLang.g4 by ANTLR 4.9.2
+
+	import structures.*;
+	import exceptions.*;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -40,7 +44,7 @@ public class IsiLangLexer extends Lexer {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'programa'", "'fimprog'", "'declare'", "','", "'int'", "'string'", 
+			null, "'programa'", "'fimprog'", "'declare'", "','", "'int'", "'String'", 
 			"'double'", "'leia'", "'escreva'", "'se'", "'entao'", "'senao'", "'enquanto'", 
 			null, null, null, null, "'('", "')'", "'{'", "'}'", "'.'", null, "'+'", 
 			"'-'", "'*'", "'/'", "'%'", "':='"
@@ -87,6 +91,43 @@ public class IsiLangLexer extends Lexer {
 	public Vocabulary getVocabulary() {
 		return VOCABULARY;
 	}
+
+
+		private int _type;
+		private String _name;
+		private String _value;
+		private VariableTable variableTable = new VariableTable();
+		private Variable v;
+
+		public void verifyIdAlreadyDeclared() { 
+			if(variableTable.exists(_name)) { 
+				throw new SemanticException("Variable '" + _name + "' already declared");
+			}
+		}
+
+		public void verifyIdNotDeclared() { 
+			if(!variableTable.exists(_name)) { 
+				throw new SemanticException("Variable '" + _name + "' not declared");
+			}
+		}
+
+		public void verifyIdDeclaration() {
+			verifyIdAlreadyDeclared();
+			v = new Variable(_name, _type, _value);
+			variableTable.add(v);
+		}
+		
+		public void verifyIsStringAllowed() {
+			if (_type != Variable.STRING) {
+				throw new SemanticException("Expected " + v.getTypeText() + " value, recieved String '" + _value + "'");
+			}
+		}
+
+		public void setValue() {		
+			v = variableTable.getVariable(_name);		
+			v.setValue(_value);
+		}
+
 
 
 	public IsiLangLexer(CharStream input) {
@@ -150,7 +191,7 @@ public class IsiLangLexer extends Lexer {
 		"\2\2HI\7h\2\2IJ\7k\2\2JK\7o\2\2KL\7r\2\2LM\7t\2\2MN\7q\2\2NO\7i\2\2O\6"+
 		"\3\2\2\2PQ\7f\2\2QR\7g\2\2RS\7e\2\2ST\7n\2\2TU\7c\2\2UV\7t\2\2VW\7g\2"+
 		"\2W\b\3\2\2\2XY\7.\2\2Y\n\3\2\2\2Z[\7k\2\2[\\\7p\2\2\\]\7v\2\2]\f\3\2"+
-		"\2\2^_\7u\2\2_`\7v\2\2`a\7t\2\2ab\7k\2\2bc\7p\2\2cd\7i\2\2d\16\3\2\2\2"+
+		"\2\2^_\7U\2\2_`\7v\2\2`a\7t\2\2ab\7k\2\2bc\7p\2\2cd\7i\2\2d\16\3\2\2\2"+
 		"ef\7f\2\2fg\7q\2\2gh\7w\2\2hi\7d\2\2ij\7n\2\2jk\7g\2\2k\20\3\2\2\2lm\7"+
 		"n\2\2mn\7g\2\2no\7k\2\2op\7c\2\2p\22\3\2\2\2qr\7g\2\2rs\7u\2\2st\7e\2"+
 		"\2tu\7t\2\2uv\7g\2\2vw\7x\2\2wx\7c\2\2x\24\3\2\2\2yz\7u\2\2z{\7g\2\2{"+
