@@ -8,6 +8,7 @@ import parser.IsiLangParser;
 
 public class MainClass {
   public static void main(String[] args) {
+
     try {
       IsiLangLexer lexer;
       IsiLangParser parser;

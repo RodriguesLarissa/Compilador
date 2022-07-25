@@ -1,5 +1,6 @@
 grammar IsiLang;
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
+COMMENT: (('//' (.)*? '\n') | ('/**' (.)*? '*/')) -> skip;
 ID: ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9])*;
 NUM: [0-9]+ (',' [0-9]+)?;
 
@@ -18,10 +19,24 @@ MOD: '%';
 ATR: ':=';
 
 TEXT: '"' ([a-z] | [A-Z] | [0-9] | ' ')+ '"';
+
 prog: 'programa' declara bloco 'fimprog' END;
-declara: 'declare' ID (',' ID)* END;
+declara: 'declare' tipo ID (',' ID)* END;
 bloco: (cmd)+;
 cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile;
+
+/**
+ // Habilitar para permitir declaração mais de 1 vez e em diversos lugares do código
+ 
+ prog: 'programa' bloco 'fimprog' END;
+ 
+ bloco: (cmd)+;
+ 
+ cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile | declara;
+ 
+ declara: 'declare' tipo ID (',' ID)* END;
+ */
+tipo: 'int' | 'string' | 'double';
 cmdleitura: 'leia' AP ID FP END;
 cmdescrita: 'escreva' AP (TEXT | ID) FP END;
 cmdexpr: ID ATR expr END;

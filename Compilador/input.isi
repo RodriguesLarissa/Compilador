@@ -1,8 +1,13 @@
 programa
 
-declare a,b,c,d.
+declare int a,b,c,d.
+//declare string e,f.
 escreva("Programa Teste").
+/**
+comentário qualquer
+*/
 
+/** outro teste de comentário*/
 escreva("Digite A").
 leia (a).
 escreva("Digite b").
@@ -14,6 +19,7 @@ se (a<b) entao {
     c:=a-b.
 }
 
+//declare double g.
 escreva ("C e igual a ").
 escreva(c).
 d:=c*a+b.
