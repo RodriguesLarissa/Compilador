@@ -20,22 +20,30 @@ ATR: ':=';
 
 TEXT: '"' ([a-z] | [A-Z] | [0-9] | ' ')+ '"';
 
-prog: 'programa' declara bloco 'fimprog' END;
-declara: 'declare' tipo ID (',' ID)* END;
-bloco: (cmd)+;
-cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile;
-
 /**
- // Habilitar para permitir declaração mais de 1 vez e em diversos lugares do código
+ prog: 'programa' declara bloco 'fimprog' END;
  
- prog: 'programa' bloco 'fimprog' END;
+ declara: 'declare' tipo ID (',' ID)* END;
  
  bloco: (cmd)+;
  
- cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile | declara;
- 
- declara: 'declare' tipo ID (',' ID)* END;
+ cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile;
  */
+
+prog: 'programa' bloco 'fimprog' END;
+
+bloco: (cmd)+;
+
+cmd:
+	cmdleitura
+	| cmdescrita
+	| cmdexpr
+	| cmdif
+	| cmdwhile
+	| declara;
+
+declara: 'declare' tipo ID (',' ID)* END;
+
 tipo: 'int' | 'string' | 'double';
 cmdleitura: 'leia' AP ID FP END;
 cmdescrita: 'escreva' AP (TEXT | ID) FP END;
