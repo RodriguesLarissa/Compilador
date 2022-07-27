@@ -101,6 +101,7 @@ public class IsiLangLexer extends Lexer {
 		private String _name;
 		private String _value;
 		private VariableTable variableTable = new VariableTable();
+		private VariableTable initializedVariables = new VariableTable();
 		private Variable v;
 
 		private Program program = new Program();
@@ -126,6 +127,18 @@ public class IsiLangLexer extends Lexer {
 			}
 		}
 
+		public void verifyVariableNotInitialized() {
+			if(!initializedVariables.exists(_name)) {
+				throw new SemanticException("Variable '" + _name + "' not initialized");
+			}
+		}
+
+		public void initializeVariable() {
+			if(!initializedVariables.exists(_name)) {
+				initializedVariables.add(variableTable.getVariable(_name));
+			}
+		}
+
 		public void verifyIdDeclaration() {
 			verifyIdAlreadyDeclared();
 			v = new Variable(_name, _type, _value);
@@ -142,12 +155,7 @@ public class IsiLangLexer extends Lexer {
 			v = variableTable.getVariable(_name);		
 			v.setValue(_value);
 		}
-
-		public void exibeCmds() {
-			for (AbstractCommand c: program.getCmds()){
-				System.out.println(c);
-			}	
-		}
+		
 
 		public void generateCodes(){
 			program.generateJavaFile();

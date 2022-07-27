@@ -13,6 +13,7 @@ grammar IsiLang;
 	private String _name;
 	private String _value;
 	private VariableTable variableTable = new VariableTable();
+	private VariableTable initializedVariables = new VariableTable();
 	private Variable v;
 
 	private Program program = new Program();
@@ -38,6 +39,18 @@ grammar IsiLang;
 		}
 	}
 
+	public void verifyVariableNotInitialized() {
+		if(!initializedVariables.exists(_name)) {
+			throw new SemanticException("Variable '" + _name + "' not initialized");
+		}
+	}
+
+	public void initializeVariable() {
+		if(!initializedVariables.exists(_name)) {
+			initializedVariables.add(variableTable.getVariable(_name));
+		}
+	}
+
 	public void verifyIdDeclaration() {
 		verifyIdAlreadyDeclared();
 		v = new Variable(_name, _type, _value);
@@ -54,12 +67,7 @@ grammar IsiLang;
 		v = variableTable.getVariable(_name);		
 		v.setValue(_value);
 	}
-
-	public void exibeCmds() {
-		for (AbstractCommand c: program.getCmds()){
-			System.out.println(c);
-		}	
-	}
+	
 
 	public void generateCodes(){
 		program.generateJavaFile();
@@ -137,7 +145,8 @@ tipo:
 	| 'double' {_type = Variable.DOUBLE;};
 
 cmdleitura:
-	'leia' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;} FP END {
+	'leia' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();_ID = _name;
+		} FP END {
 		Variable v = (Variable)variableTable.getVariable(_ID);
 		CmdLeitura cmd = new CmdLeitura(_ID, v);
 		stack.peek().add(cmd);
@@ -146,14 +155,16 @@ cmdleitura:
 cmdescrita:
 	'escreva' AP (
 		TEXT {_ID = _input.LT(-1).getText();verifyIdNotDeclared();}
-		| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;}
+		| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();_ID = _name;
+			}
 	) FP END {		
 		CmdEscrita cmd = new CmdEscrita(_ID);
 		stack.peek().add(cmd);
 	};
 
 cmdexpr:
-	ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;} ATR {
+	ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();_ID = _name;
+		} ATR {
 		_exprContent = "";
 		} (
 		expr
@@ -197,7 +208,7 @@ termol: (VEZES | DIVIDIDO | MOD) { _exprContent += " " + _input.LT(-1).getText()
 fator:
 	NUM { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
 		}
-	| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+	| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
 		}
 	| AP { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
 		} expr FP { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();

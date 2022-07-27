@@ -108,6 +108,7 @@ public class IsiLangParser extends Parser {
 		private String _name;
 		private String _value;
 		private VariableTable variableTable = new VariableTable();
+		private VariableTable initializedVariables = new VariableTable();
 		private Variable v;
 
 		private Program program = new Program();
@@ -133,6 +134,18 @@ public class IsiLangParser extends Parser {
 			}
 		}
 
+		public void verifyVariableNotInitialized() {
+			if(!initializedVariables.exists(_name)) {
+				throw new SemanticException("Variable '" + _name + "' not initialized");
+			}
+		}
+
+		public void initializeVariable() {
+			if(!initializedVariables.exists(_name)) {
+				initializedVariables.add(variableTable.getVariable(_name));
+			}
+		}
+
 		public void verifyIdDeclaration() {
 			verifyIdAlreadyDeclared();
 			v = new Variable(_name, _type, _value);
@@ -149,12 +162,7 @@ public class IsiLangParser extends Parser {
 			v = variableTable.getVariable(_name);		
 			v.setValue(_value);
 		}
-
-		public void exibeCmds() {
-			for (AbstractCommand c: program.getCmds()){
-				System.out.println(c);
-			}	
-		}
+		
 
 		public void generateCodes(){
 			program.generateJavaFile();
@@ -493,7 +501,8 @@ public class IsiLangParser extends Parser {
 			match(AP);
 			setState(78);
 			match(ID);
-			 _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;
+			 _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();_ID = _name;
+					
 			setState(80);
 			match(FP);
 			setState(81);
@@ -552,7 +561,8 @@ public class IsiLangParser extends Parser {
 				{
 				setState(88);
 				match(ID);
-				 _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;
+				 _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();_ID = _name;
+							
 				}
 				break;
 			default:
@@ -601,7 +611,8 @@ public class IsiLangParser extends Parser {
 			{
 			setState(96);
 			match(ID);
-			 _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;
+			 _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();_ID = _name;
+					
 			setState(98);
 			match(ATR);
 
@@ -1163,7 +1174,7 @@ public class IsiLangParser extends Parser {
 				{
 				setState(189);
 				match(ID);
-				 _name = _input.LT(-1).getText();verifyIdNotDeclared(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+				 _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
 						
 				}
 				break;

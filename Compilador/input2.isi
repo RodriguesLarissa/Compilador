@@ -1,0 +1,6 @@
+programa
+declare int a.
+leia(a).
+//a := 1.
+escreva(a).
+fimprog.
