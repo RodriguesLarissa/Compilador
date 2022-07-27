@@ -1,5 +1,6 @@
 package structures;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class VariableTable {
@@ -19,5 +20,13 @@ public class VariableTable {
 
     public Variable getVariable(String name) {
         return map.get(name);
+    }
+
+    public ArrayList<Variable> getAll() {
+        ArrayList<Variable> xs = new ArrayList<Variable>();
+        for (Variable var : map.values()) {
+            xs.add(var);
+        }
+        return xs;
     }
 }

@@ -14,6 +14,19 @@ public class Variable extends Symbol {
         this.value = value;
     }
 
+    public String generateJavaCode() {
+        String str;
+        if (type == INT) {
+            str = "int ";
+        } else if (type == DOUBLE) {
+            str = "double ";
+        } else {
+            str = "String ";
+        }
+
+        return str + " " + super.name + ";";
+    }
+
     public int getType() {
         return type;
     }
