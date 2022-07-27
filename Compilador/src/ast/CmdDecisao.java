@@ -32,8 +32,21 @@ public class CmdDecisao extends AbstractCommand {
 
     @Override
     public String genJavaCode() {
-        // TODO Auto-generated method stub
-        return null;
+        StringBuilder str = new StringBuilder();
+        str.append("if (" + condition + ") {\n");
+        for (AbstractCommand cmd : listTrue) {
+            str.append("    " + cmd.genJavaCode());
+        }
+        str.append("}");
+        if (listFalse.size() > 0) {
+            str.append(" else {\n");
+            for (AbstractCommand cmd : listFalse) {
+                str.append("    " + cmd.genJavaCode());
+            }
+            str.append("}");
+
+        }
+        return str.toString();
     }
 
     @Override

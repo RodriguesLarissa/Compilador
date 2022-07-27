@@ -14,8 +14,15 @@ public class CmdLeitura extends AbstractCommand {
 
     @Override
     public String genJavaCode() {
-        // TODO Auto-generated method stub
-        return null;
+        String f = "";
+        if (var.getType() == Variable.INT) {
+            f = "nextInt();";
+        } else if (var.getType() == Variable.DOUBLE) {
+            f = "nextDouble();";
+        } else {
+            f = "nextLine();";
+        }
+        return id + "= scan." + f;
     }
 
     @Override

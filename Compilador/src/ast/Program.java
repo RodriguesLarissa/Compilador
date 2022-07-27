@@ -14,9 +14,9 @@ public class Program {
     public void generateJavaFile() {
         StringBuilder finalFile = new StringBuilder();
         finalFile.append("import java.util.Scanner;\n");
-        finalFile.append("public class MainClass{ \n");
-        finalFile.append("public static void main(String args[]){\n ");
-        finalFile.append("Scanner scan = new Scanner(System.in);\n");
+        finalFile.append("public class MainClass {\n");
+        finalFile.append("  public static void main(String args[]){\n ");
+        finalFile.append("      Scanner scan = new Scanner(System.in);\n");
 
         for (Variable var : varTable.getAll()) {
             finalFile.append(var.genJavaCode() + "\n");
@@ -24,7 +24,7 @@ public class Program {
         for (AbstractCommand cmd : cmds) {
             finalFile.append(cmd.genJavaCode() + "\n");
         }
-        finalFile.append("}");
+        finalFile.append("  }\n");
         finalFile.append("}");
 
         try {

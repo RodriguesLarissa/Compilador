@@ -12,8 +12,7 @@ public class CmdAtr extends AbstractCommand {
 
     @Override
     public String genJavaCode() {
-        // TODO Auto-generated method stub
-        return null;
+        return id + " = " + expr + ";";
     }
 
     @Override
