@@ -14,7 +14,7 @@ public class Variable extends Symbol {
         this.value = value;
     }
 
-    public String generateJavaCode() {
+    public String genJavaCode() {
         String str;
         if (type == INT) {
             str = "int ";

@@ -3,6 +3,9 @@ grammar IsiLang;
 @header {
 	import structures.*;
 	import exceptions.*;
+	import ast.*;
+	import java.util.ArrayList;
+	import java.util.Stack;
 }
 
 @members {
@@ -11,6 +14,17 @@ grammar IsiLang;
 	private String _value;
 	private VariableTable variableTable = new VariableTable();
 	private Variable v;
+
+	private Program program = new Program();
+	private ArrayList<AbstractCommand> currentThread;
+	private Stack<ArrayList<AbstractCommand>> stack = new Stack<ArrayList<AbstractCommand>>();
+	private String _ID;
+	private String _exprContent;
+	private String _exprCondition;
+	private ArrayList<AbstractCommand> listTrue;
+	private ArrayList<AbstractCommand> listFalse;
+	private ArrayList<AbstractCommand> listWhile;
+
 
 	public void verifyIdAlreadyDeclared() { 
 		if(variableTable.exists(_name)) { 
@@ -74,17 +88,23 @@ TEXT: '"' ([a-z] | [A-Z] | [0-9] | ' ')+ '"';
  cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile;
  */
 
-prog: 'programa' bloco 'fimprog' END;
+prog:
+	'programa' bloco 'fimprog' END {
+		program.setVarTable(variableTable);
+		program.setCmds(stack.pop());
+		};
 
-bloco: (cmd)+;
+bloco: (
+		(
+			{
+			currentThread = new ArrayList<AbstractCommand>();
+			stack.push(currentThread);
+			} cmd
+		)
+		| (declara)
+	)+;
 
-cmd:
-	cmdleitura
-	| cmdescrita
-	| cmdexpr
-	| cmdif
-	| cmdwhile
-	| declara;
+cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile;
 
 declara:
 	'declare' tipo ID {
@@ -103,33 +123,71 @@ tipo:
 	'int' {_type = Variable.INT;}
 	| 'String' {_type = Variable.STRING;}
 	| 'double' {_type = Variable.DOUBLE;};
+
 cmdleitura:
-	'leia' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();} FP END;
+	'leia' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;} FP END {
+		Variable v = (Variable)variableTable.getVariable(_ID);
+		CmdLeitura cmd = new CmdLeitura(_ID, v);
+		stack.peek().add(cmd);
+	};
+
 cmdescrita:
 	'escreva' AP (
 		TEXT
-		| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();}
-	) FP END;
+		| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;}
+	) FP END {		
+		CmdEscrita cmd = new CmdEscrita(_ID);
+		stack.peek().add(cmd);
+	};
+
 cmdexpr:
-	ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();} ATR (
+	ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;} ATR {
+		_exprContent = "";
+		} (
 		expr
-		| TEXT {_value = _input.LT(-1).getText(); setValue(); verifyIsStringAllowed();}
-	) END;
+		| TEXT {
+			_value = _input.LT(-1).getText(); setValue(); verifyIsStringAllowed();_exprContent = _value;
+			}
+	) END {		
+		CmdAtr cmd = new CmdAtr(_ID, _exprContent);
+		stack.peek().add(cmd);
+	};
+
 cmdif:
-	'se' AP expr OP_REL expr FP 'entao' AC cmd+ FC (
-		'senao' AC cmd+ FC
-	)?;
-cmdwhile: 'enquanto' AP expr OP_REL expr FP AC cmd+ FC;
+	'se' AP {_exprCondition = "";} expr OP_REL {_exprCondition += _input.LT(-1).getText();} expr FP
+		{CmdDecisao cmd = new CmdDecisao();cmd.setCondition(_exprCondition);} 'entao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
+		} (cmd)+ FC {listTrue = stack.pop();} (
+		'senao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
+			cmd
+		)+ FC {listFalse = stack.pop();}
+	)? {
+		cmd.setListTrue(listTrue);
+		cmd.setListFalse(listFalse);
+		stack.peek().add(cmd);};
+
+cmdwhile:
+	'enquanto' AP {_exprCondition = "";} expr OP_REL {_exprCondition += _input.LT(-1).getText();}
+		expr FP {CmdLoop cmd = new CmdLoop();cmd.setCondition(_exprCondition);} AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
+		} (cmd)+ FC {listWhile = stack.pop();
+		cmd.setCmds(listWhile);
+		stack.peek().add(cmd);
+		};
 
 expr: termo exprll;
 exprll: exprl exprll |;
-exprl: (MAIS | MENOS) termo;
+exprl: (MAIS | MENOS) { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();		
+		} termo;
 
 termo: fator termoll;
 termoll: termol termoll |;
-termol: (VEZES | DIVIDIDO | MOD) fator;
+termol: (VEZES | DIVIDIDO | MOD) { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+		} fator;
 fator:
-	NUM
-	| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();}
-	| AP expr FP;
+	NUM { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+		}
+	| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+		}
+	| AP { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+		} expr FP { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+		};
 

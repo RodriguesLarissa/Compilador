@@ -14,6 +14,22 @@ public class CmdDecisao extends AbstractCommand {
         this.listFalse = listFalse;
     }
 
+    public CmdDecisao() {
+
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public void setListTrue(ArrayList<AbstractCommand> listTrue) {
+        this.listTrue = listTrue;
+    }
+
+    public void setListFalse(ArrayList<AbstractCommand> listFalse) {
+        this.listFalse = listFalse;
+    }
+
     @Override
     public String genJavaCode() {
         // TODO Auto-generated method stub

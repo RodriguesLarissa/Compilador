@@ -3,7 +3,7 @@ package structures;
 public abstract class Symbol {
     protected String name;
 
-    public abstract String generateJavaCode();
+    public abstract String genJavaCode();
 
     public Symbol(String name) {
         this.name = name;

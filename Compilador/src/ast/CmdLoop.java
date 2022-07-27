@@ -4,11 +4,23 @@ import java.util.ArrayList;
 
 public class CmdLoop extends AbstractCommand {
 
-    private String condicao;
+    private String condition;
     private ArrayList<AbstractCommand> cmds;
 
-    public CmdLoop(String condicao, ArrayList<AbstractCommand> cmds) {
-        this.condicao = condicao;
+    public CmdLoop(String condition, ArrayList<AbstractCommand> cmds) {
+        this.condition = condition;
+        this.cmds = cmds;
+    }
+
+    public CmdLoop() {
+
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public void setCmds(ArrayList<AbstractCommand> cmds) {
         this.cmds = cmds;
     }
 
@@ -20,7 +32,7 @@ public class CmdLoop extends AbstractCommand {
 
     @Override
     public String toString() {
-        return "CmdLoop [cmds=" + cmds + ", condicao=" + condicao + "]";
+        return "CmdLoop [cmds=" + cmds + ", condicao=" + condition + "]";
     }
 
 }

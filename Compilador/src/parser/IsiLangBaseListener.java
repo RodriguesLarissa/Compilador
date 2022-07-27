@@ -3,6 +3,9 @@ package parser;
 
 	import structures.*;
 	import exceptions.*;
+	import ast.*;
+	import java.util.ArrayList;
+	import java.util.Stack;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;

@@ -3,6 +3,9 @@ package parser;
 
 	import structures.*;
 	import exceptions.*;
+	import ast.*;
+	import java.util.ArrayList;
+	import java.util.Stack;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -99,6 +102,17 @@ public class IsiLangLexer extends Lexer {
 		private String _value;
 		private VariableTable variableTable = new VariableTable();
 		private Variable v;
+
+		private Program program = new Program();
+		private ArrayList<AbstractCommand> currentThread;
+		private Stack<ArrayList<AbstractCommand>> stack = new Stack<ArrayList<AbstractCommand>>();
+		private String _ID;
+		private String _exprContent;
+		private String _exprCondition;
+		private ArrayList<AbstractCommand> listTrue;
+		private ArrayList<AbstractCommand> listFalse;
+		private ArrayList<AbstractCommand> listWhile;
+
 
 		public void verifyIdAlreadyDeclared() { 
 			if(variableTable.exists(_name)) { 

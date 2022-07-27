@@ -35,4 +35,13 @@ public class Program {
             ex.printStackTrace();
         }
     }
+
+    public void setVarTable(VariableTable varTable) {
+        this.varTable = varTable;
+    }
+
+    public void setCmds(ArrayList<AbstractCommand> cmds) {
+        this.cmds = cmds;
+    }
+
 }
