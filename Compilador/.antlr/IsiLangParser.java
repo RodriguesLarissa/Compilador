@@ -150,6 +150,10 @@ public class IsiLangParser extends Parser {
 			v.setValue(_value);
 		}
 
+		public void generateCodes(){
+			program.generateJavaFile();
+		}
+
 
 	public IsiLangParser(TokenStream input) {
 		super(input);

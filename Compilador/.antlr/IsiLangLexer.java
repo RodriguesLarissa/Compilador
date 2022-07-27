@@ -142,6 +142,10 @@ public class IsiLangLexer extends Lexer {
 			v.setValue(_value);
 		}
 
+		public void generateCodes(){
+			program.generateJavaFile();
+		}
+
 
 
 	public IsiLangLexer(CharStream input) {

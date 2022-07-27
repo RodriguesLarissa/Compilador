@@ -55,6 +55,10 @@ grammar IsiLang;
 		v.setValue(_value);
 	}
 
+	public void generateCodes(){
+		program.generateJavaFile();
+	}
+
 }
 
 WS: (' ' | '\t' | '\n' | '\r') -> skip;

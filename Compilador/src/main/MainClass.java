@@ -25,6 +25,8 @@ public class MainClass {
 
       parser.prog();
 
+      parser.generateCodes();
+
       System.out.println("Compilation Successful");
     } catch (SemanticException ex) {
       System.err.println("Semantic error: " + ex.getMessage());
