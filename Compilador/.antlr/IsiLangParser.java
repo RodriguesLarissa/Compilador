@@ -153,7 +153,7 @@ public class IsiLangParser extends Parser {
 		}
 		
 		public void verifyIsStringAllowed() {
-			if (_type != Variable.STRING) {
+			if (v.getType() != Variable.STRING) {
 				throw new SemanticException("Expected " + v.getTypeText() + " value, recieved String '" + _value + "'");
 			}
 		}
@@ -1165,7 +1165,8 @@ public class IsiLangParser extends Parser {
 				{
 				setState(187);
 				match(NUM);
-				 _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+
+						_exprContent += _input.LT(-1).getText().replace(',', '.'); _exprCondition += _input.LT(-1).getText().replace(',', '.');
 						
 				}
 				break;

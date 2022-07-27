@@ -1,0 +1,32 @@
+programa
+
+
+declare String s.
+declare double d.
+
+escreva("Quanto deveria ser a nota desse compilador? 0,00 a 10,00").
+
+declare int i.
+i := 1.
+
+leia(d).
+enquanto (d != 10,0) {
+    se (d < 10,0) entao {
+        escreva("Acho que deveria ser mais!").
+    } senao {
+        escreva("Ai tambêm é muitoo... :)!").
+    }
+    leia(d).
+    i := i + 1.
+}
+
+s := "Voce precisou de".
+escreva(s).
+escreva(i).
+se (i >= 1) entao {
+    escreva("Tentativa").
+} senao {
+    escreva("Tentativas").
+}
+
+fimprog.

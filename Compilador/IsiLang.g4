@@ -58,7 +58,7 @@ grammar IsiLang;
 	}
 	
 	public void verifyIsStringAllowed() {
-		if (_type != Variable.STRING) {
+		if (v.getType() != Variable.STRING) {
 			throw new SemanticException("Expected " + v.getTypeText() + " value, recieved String '" + _value + "'");
 		}
 	}
@@ -94,7 +94,9 @@ DIVIDIDO: '/';
 MOD: '%';
 ATR: ':=';
 
-TEXT: '"' ([a-z] | [A-Z] | [0-9] | ' ')+ '"';
+//TEXT: '"' ( [a-z] | [A-Z] | [0-9] | ' ')+ '"';
+
+TEXT: '"' ( [#-~À-ÖØ-öø-ÿ] | '!' | ' ')+ '"';
 
 /**
  prog: 'programa' declara bloco 'fimprog' END;
@@ -206,7 +208,8 @@ termoll: termol termoll |;
 termol: (VEZES | DIVIDIDO | MOD) { _exprContent += " " + _input.LT(-1).getText() + " "; _exprCondition += " " + _input.LT(-1).getText() + " ";
 		} fator;
 fator:
-	NUM { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+	NUM {
+		_exprContent += _input.LT(-1).getText().replace(',', '.'); _exprCondition += _input.LT(-1).getText().replace(',', '.');
 		}
 	| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
 		}

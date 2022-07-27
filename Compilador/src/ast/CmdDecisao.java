@@ -35,15 +35,15 @@ public class CmdDecisao extends AbstractCommand {
         StringBuilder str = new StringBuilder();
         str.append(toTabs(qntTabs) + "if (" + condition + ") {\n");
         for (AbstractCommand cmd : listTrue) {
-            str.append(cmd.genJavaCode(qntTabs + 1));
+            str.append(cmd.genJavaCode(qntTabs + 1) + "\n");
         }
-        str.append("\n" + toTabs(qntTabs) + "}");
+        str.append(toTabs(qntTabs) + "}");
         if (listFalse.size() > 0) {
             str.append(" else {\n");
             for (AbstractCommand cmd : listFalse) {
-                str.append(cmd.genJavaCode(qntTabs + 1));
+                str.append(cmd.genJavaCode(qntTabs + 1) + "\n");
             }
-            str.append("\n" + toTabs(qntTabs) + "}");
+            str.append(toTabs(qntTabs) + "}");
 
         }
         return str.toString();
