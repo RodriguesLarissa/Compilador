@@ -695,7 +695,8 @@ public class IsiLangParser extends Parser {
 			expr();
 			setState(112);
 			match(OP_REL);
-			_exprCondition += _input.LT(-1).getText();
+			_exprCondition += " " + _input.LT(-1).getText() + " ";
+					
 			setState(114);
 			expr();
 			setState(115);
@@ -811,7 +812,8 @@ public class IsiLangParser extends Parser {
 			expr();
 			setState(146);
 			match(OP_REL);
-			_exprCondition += _input.LT(-1).getText();
+			_exprCondition += " " + _input.LT(-1).getText() + " ";
+					
 			setState(148);
 			expr();
 			setState(149);
@@ -971,7 +973,7 @@ public class IsiLangParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			 _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();		
+			 _exprContent += " " + _input.LT(-1).getText() + " "; _exprCondition += " " + _input.LT(-1).getText() + " ";		
 					
 			setState(172);
 			termo();
@@ -1109,7 +1111,7 @@ public class IsiLangParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			 _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+			 _exprContent += " " + _input.LT(-1).getText() + " "; _exprCondition += " " + _input.LT(-1).getText() + " ";
 					
 			setState(185);
 			fator();

@@ -25,14 +25,14 @@ public class CmdLoop extends AbstractCommand {
     }
 
     @Override
-    public String genJavaCode() {
+    public String genJavaCode(int qntTabs) {
 
         StringBuilder str = new StringBuilder();
-        str.append("while (" + condition + ") {\n");
+        str.append(toTabs(qntTabs) + "while (" + condition + ") {\n");
         for (AbstractCommand cmd : cmds) {
-            str.append("    " + cmd.genJavaCode());
+            str.append("    " + cmd.genJavaCode(qntTabs + 1));
         }
-        str.append("}");
+        str.append(toTabs(qntTabs) + "}");
 
         return str.toString();
     }

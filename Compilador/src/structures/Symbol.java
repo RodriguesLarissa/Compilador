@@ -1,9 +1,15 @@
 package structures;
 
+import Helper.UsefulChar;
+
 public abstract class Symbol {
     protected String name;
 
-    public abstract String genJavaCode();
+    public abstract String genJavaCode(int qntTabs);
+
+    public String toTabs(int qntTabs) {
+        return UsefulChar.TAB.repeat(qntTabs);
+    }
 
     public Symbol(String name) {
         this.name = name;

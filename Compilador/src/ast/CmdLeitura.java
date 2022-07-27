@@ -13,7 +13,7 @@ public class CmdLeitura extends AbstractCommand {
     }
 
     @Override
-    public String genJavaCode() {
+    public String genJavaCode(int qntTabs) {
         String f = "";
         if (var.getType() == Variable.INT) {
             f = "nextInt();";
@@ -22,7 +22,7 @@ public class CmdLeitura extends AbstractCommand {
         } else {
             f = "nextLine();";
         }
-        return id + "= scan." + f;
+        return toTabs(qntTabs) + id + " = scan." + f;
     }
 
     @Override

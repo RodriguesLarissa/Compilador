@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+import Helper.UsefulChar;
 import structures.Variable;
 import structures.VariableTable;
 
@@ -15,17 +16,18 @@ public class Program {
         StringBuilder finalFile = new StringBuilder();
         finalFile.append("import java.util.Scanner;\n");
         finalFile.append("public class MainClass {\n");
-        finalFile.append("  public static void main(String args[]){\n ");
-        finalFile.append("     Scanner scan = new Scanner(System.in);\n\n");
+        finalFile.append(toTabs(1) + "public static void main(String args[]){\n ");
+        finalFile.append(toTabs(2) + "Scanner scan = new Scanner(System.in);\n\n");
 
         for (Variable var : varTable.getAll()) {
-            finalFile.append("      " + var.genJavaCode() + "\n");
+            finalFile.append(var.genJavaCode(2) + "\n");
         }
         finalFile.append("\n");
         for (AbstractCommand cmd : cmds) {
-            finalFile.append("      " + cmd.genJavaCode() + "\n");
+            finalFile.append(cmd.genJavaCode(2) + "\n");
         }
-        finalFile.append("  }\n");
+        finalFile.append("\n" + toTabs(2) + "scan.close();\n");
+        finalFile.append(toTabs(1) + "}\n");
         finalFile.append("}");
 
         try {
@@ -47,6 +49,10 @@ public class Program {
 
     public void setCmds(ArrayList<AbstractCommand> cmds) {
         this.cmds = cmds;
+    }
+
+    private String toTabs(int qntTabs) {
+        return UsefulChar.TAB.repeat(qntTabs);
     }
 
 }

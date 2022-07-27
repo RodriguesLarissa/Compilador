@@ -1,15 +1,10 @@
 programa
-declare int a,b,c,d.
-//declare string e,f.
-escreva("Programa Teste").
-/**
-comentário qualquer
-*/
 
-/** outro teste de comentário*/
+declare int a,b,c,d.
+escreva("Programa Teste").
 escreva("Digite A").
-leia (a).
-escreva("Digite b").
+leia(a).
+escreva("Digite B").
 leia(b).
 
 se (a<b) entao {
@@ -18,22 +13,12 @@ se (a<b) entao {
     c:=a-b.
 }
 
-//Erros que podem ser gerados
-
-//escreava (y). //y não declarada!
-
-// c:= x + b.   // x não declarada!
-
-// declare a.   //a já declarada!
-
-//a:="A".       //a tipo int recebeu String! O mesmo ocorre para double
-
-
-declare String g.
-g := "122".
 escreva ("C e igual a ").
 escreva(c).
-d:=c*a+b.
-escreva ("D").
+
+d:=c*((a+b)-(a*c)).
+
+escreva ("D e igual a ").
 escreva(d).
+
 fimprog.

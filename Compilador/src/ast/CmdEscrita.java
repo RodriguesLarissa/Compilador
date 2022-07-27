@@ -9,8 +9,8 @@ public class CmdEscrita extends AbstractCommand {
     }
 
     @Override
-    public String genJavaCode() {
-        return "System.out.println(" + id + ");";
+    public String genJavaCode(int qntTabs) {
+        return toTabs(qntTabs) + "System.out.println(" + id + ");";
     }
 
     @Override

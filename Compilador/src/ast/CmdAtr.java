@@ -11,8 +11,8 @@ public class CmdAtr extends AbstractCommand {
     }
 
     @Override
-    public String genJavaCode() {
-        return id + " = " + expr + ";";
+    public String genJavaCode(int qntTabs) {
+        return toTabs(qntTabs) + id + " = " + expr + ";";
     }
 
     @Override

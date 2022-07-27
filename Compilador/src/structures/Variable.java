@@ -14,7 +14,7 @@ public class Variable extends Symbol {
         this.value = value;
     }
 
-    public String genJavaCode() {
+    public String genJavaCode(int qntTabs) {
         String str;
         if (type == INT) {
             str = "int ";
@@ -24,7 +24,7 @@ public class Variable extends Symbol {
             str = "String ";
         }
 
-        return str + " " + super.name + ";";
+        return super.toTabs(qntTabs) + str + " " + super.name + ";";
     }
 
     public int getType() {

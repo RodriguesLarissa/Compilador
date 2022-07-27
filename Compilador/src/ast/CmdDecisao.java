@@ -31,19 +31,19 @@ public class CmdDecisao extends AbstractCommand {
     }
 
     @Override
-    public String genJavaCode() {
+    public String genJavaCode(int qntTabs) {
         StringBuilder str = new StringBuilder();
-        str.append("if (" + condition + ") {\n");
+        str.append(toTabs(qntTabs) + "if (" + condition + ") {\n");
         for (AbstractCommand cmd : listTrue) {
-            str.append(cmd.genJavaCode());
+            str.append(cmd.genJavaCode(qntTabs + 1));
         }
-        str.append("\n}");
+        str.append("\n" + toTabs(qntTabs) + "}");
         if (listFalse.size() > 0) {
             str.append(" else {\n");
             for (AbstractCommand cmd : listFalse) {
-                str.append(cmd.genJavaCode());
+                str.append(cmd.genJavaCode(qntTabs + 1));
             }
-            str.append("\n}");
+            str.append("\n" + toTabs(qntTabs) + "}");
 
         }
         return str.toString();

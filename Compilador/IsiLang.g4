@@ -166,8 +166,8 @@ cmdexpr:
 	};
 
 cmdif:
-	'se' AP {_exprCondition = "";} expr OP_REL {_exprCondition += _input.LT(-1).getText();} expr FP
-		{CmdDecisao cmd = new CmdDecisao();cmd.setCondition(_exprCondition);} 'entao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
+	'se' AP {_exprCondition = "";} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
+		} expr FP {CmdDecisao cmd = new CmdDecisao();cmd.setCondition(_exprCondition);} 'entao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
 		} (cmd)+ FC {listTrue = stack.pop();} (
 		'senao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
 			cmd
@@ -178,8 +178,8 @@ cmdif:
 		stack.peek().add(cmd);};
 
 cmdwhile:
-	'enquanto' AP {_exprCondition = "";} expr OP_REL {_exprCondition += _input.LT(-1).getText();}
-		expr FP {CmdLoop cmd = new CmdLoop();cmd.setCondition(_exprCondition);} AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
+	'enquanto' AP {_exprCondition = "";} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
+		} expr FP {CmdLoop cmd = new CmdLoop();cmd.setCondition(_exprCondition);} AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
 		} (cmd)+ FC {listWhile = stack.pop();
 		cmd.setCmds(listWhile);
 		stack.peek().add(cmd);
@@ -187,12 +187,12 @@ cmdwhile:
 
 expr: termo exprll;
 exprll: exprl exprll |;
-exprl: (MAIS | MENOS) { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();		
+exprl: (MAIS | MENOS) { _exprContent += " " + _input.LT(-1).getText() + " "; _exprCondition += " " + _input.LT(-1).getText() + " ";		
 		} termo;
 
 termo: fator termoll;
 termoll: termol termoll |;
-termol: (VEZES | DIVIDIDO | MOD) { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+termol: (VEZES | DIVIDIDO | MOD) { _exprContent += " " + _input.LT(-1).getText() + " "; _exprCondition += " " + _input.LT(-1).getText() + " ";
 		} fator;
 fator:
 	NUM { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
