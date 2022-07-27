@@ -55,6 +55,12 @@ grammar IsiLang;
 		v.setValue(_value);
 	}
 
+	public void exibeCmds() {
+		for (AbstractCommand c: program.getCmds()){
+			System.out.println(c);
+		}	
+	}
+
 	public void generateCodes(){
 		program.generateJavaFile();
 	}
@@ -98,17 +104,19 @@ prog:
 		program.setCmds(stack.pop());
 		};
 
-bloco: (
-		(
-			{
+bloco:
+	{
 			currentThread = new ArrayList<AbstractCommand>();
 			stack.push(currentThread);
-			} cmd
-		)
-		| (declara)
-	)+;
+			} (cmd)+;
 
-cmd: cmdleitura | cmdescrita | cmdexpr | cmdif | cmdwhile;
+cmd:
+	cmdleitura
+	| cmdescrita
+	| cmdexpr
+	| cmdif
+	| cmdwhile
+	| declara;
 
 declara:
 	'declare' tipo ID {
@@ -137,7 +145,7 @@ cmdleitura:
 
 cmdescrita:
 	'escreva' AP (
-		TEXT
+		TEXT {_ID = _input.LT(-1).getText();verifyIdNotDeclared();}
 		| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();_ID = _name;}
 	) FP END {		
 		CmdEscrita cmd = new CmdEscrita(_ID);

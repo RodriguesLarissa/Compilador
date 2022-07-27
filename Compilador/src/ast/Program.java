@@ -16,13 +16,14 @@ public class Program {
         finalFile.append("import java.util.Scanner;\n");
         finalFile.append("public class MainClass {\n");
         finalFile.append("  public static void main(String args[]){\n ");
-        finalFile.append("      Scanner scan = new Scanner(System.in);\n");
+        finalFile.append("     Scanner scan = new Scanner(System.in);\n\n");
 
         for (Variable var : varTable.getAll()) {
-            finalFile.append(var.genJavaCode() + "\n");
+            finalFile.append("      " + var.genJavaCode() + "\n");
         }
+        finalFile.append("\n");
         for (AbstractCommand cmd : cmds) {
-            finalFile.append(cmd.genJavaCode() + "\n");
+            finalFile.append("      " + cmd.genJavaCode() + "\n");
         }
         finalFile.append("  }\n");
         finalFile.append("}");
@@ -34,6 +35,10 @@ public class Program {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public ArrayList<AbstractCommand> getCmds() {
+        return cmds;
     }
 
     public void setVarTable(VariableTable varTable) {

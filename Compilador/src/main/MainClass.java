@@ -25,6 +25,8 @@ public class MainClass {
 
       parser.prog();
 
+      parser.exibeCmds();
+
       parser.generateCodes();
 
       System.out.println("Compilation Successful");

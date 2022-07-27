@@ -142,6 +142,12 @@ public class IsiLangLexer extends Lexer {
 			v.setValue(_value);
 		}
 
+		public void exibeCmds() {
+			for (AbstractCommand c: program.getCmds()){
+				System.out.println(c);
+			}	
+		}
+
 		public void generateCodes(){
 			program.generateJavaFile();
 		}
