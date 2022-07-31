@@ -71,6 +71,7 @@ grammar IsiLang;
 
 	public void generateCodes(){
 		program.generateJavaFile();
+		program.generatePythonFile();
 	}
 
 }

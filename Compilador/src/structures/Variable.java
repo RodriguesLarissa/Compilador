@@ -27,6 +27,10 @@ public class Variable extends Symbol {
         return super.toTabs(qntTabs) + str + " " + super.name + ";";
     }
 
+    public String genPythonCode(int qntTabs) {
+        return super.toTabs(qntTabs) + super.name + " = None";
+    }
+
     public int getType() {
         return type;
     }

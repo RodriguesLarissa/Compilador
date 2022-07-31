@@ -26,6 +26,19 @@ public class CmdLeitura extends AbstractCommand {
     }
 
     @Override
+    public String genPythonCode(int qntTabs) {
+        String f = "";
+        if (var.getType() == Variable.INT) {
+            f = "int";
+        } else if (var.getType() == Variable.DOUBLE) {
+            f = "float";
+        } else {
+            return toTabs(qntTabs) + id + " = input()";
+        }
+        return toTabs(qntTabs) + id + " = " + f + "(input())";
+    }
+
+    @Override
     public String toString() {
         return "CmdLeitura [id=" + id + ", var=" + var + "]";
     }

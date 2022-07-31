@@ -39,6 +39,24 @@ public class Program {
         }
     }
 
+    public void generatePythonFile() {
+        StringBuilder finalFile = new StringBuilder();
+        for (Variable var : varTable.getAll()) {
+            finalFile.append(var.genPythonCode(0) + "\n");
+        }
+        finalFile.append("\n");
+        for (AbstractCommand cmd : cmds) {
+            finalFile.append(cmd.genPythonCode(0) + "\n");
+        }
+        try {
+            FileWriter fr = new FileWriter(new File("Teste.py"));
+            fr.write(finalFile.toString());
+            fr.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public ArrayList<AbstractCommand> getCmds() {
         return cmds;
     }

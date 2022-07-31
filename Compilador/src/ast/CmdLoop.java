@@ -38,6 +38,18 @@ public class CmdLoop extends AbstractCommand {
     }
 
     @Override
+    public String genPythonCode(int qntTabs) {
+
+        StringBuilder str = new StringBuilder();
+        str.append(toTabs(qntTabs) + "while " + condition + ":\n");
+        for (AbstractCommand cmd : cmds) {
+            str.append(cmd.genPythonCode(qntTabs + 1) + "\n");
+        }
+
+        return str.toString();
+    }
+
+    @Override
     public String toString() {
         return "CmdLoop [cmds=" + cmds + ", condicao=" + condition + "]";
     }

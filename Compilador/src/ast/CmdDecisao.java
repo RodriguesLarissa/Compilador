@@ -50,6 +50,23 @@ public class CmdDecisao extends AbstractCommand {
     }
 
     @Override
+    public String genPythonCode(int qntTabs) {
+        StringBuilder str = new StringBuilder();
+        str.append(toTabs(qntTabs) + "if " + condition + ":\n");
+        for (AbstractCommand cmd : listTrue) {
+            str.append(cmd.genPythonCode(qntTabs + 1) + "\n");
+        }
+        if (listFalse.size() > 0) {
+            str.append(toTabs(qntTabs) + "else:\n");
+            for (AbstractCommand cmd : listFalse) {
+                str.append(cmd.genPythonCode(qntTabs + 1) + "\n");
+            }
+
+        }
+        return str.toString();
+    }
+
+    @Override
     public String toString() {
         return "CmdDecisao [condition=" + condition + ", listFalse=" + listFalse + ", listTrue=" + listTrue + "]";
     }

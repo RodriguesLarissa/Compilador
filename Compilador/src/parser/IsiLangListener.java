@@ -1,4 +1,4 @@
-// Generated from IsiLang.g4 by ANTLR 4.10.1
+// Generated from Compilador/IsiLang.g4 by ANTLR 4.10.1
 package parser;
 
 	import structures.*;

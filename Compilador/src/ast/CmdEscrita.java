@@ -14,6 +14,11 @@ public class CmdEscrita extends AbstractCommand {
     }
 
     @Override
+    public String genPythonCode(int qntTabs) {
+        return toTabs(qntTabs) + "print(" + id + ")";
+    }
+
+    @Override
     public String toString() {
         return "CmdEscrita [id=" + id + "]";
     }

@@ -16,6 +16,11 @@ public class CmdAtr extends AbstractCommand {
     }
 
     @Override
+    public String genPythonCode(int qntTabs) {
+        return toTabs(qntTabs) + id + " = " + expr;
+    }
+
+    @Override
     public String toString() {
         return "CmdAtr [expr=" + expr + ", id=" + id + "]";
     }

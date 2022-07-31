@@ -1,4 +1,4 @@
-// Generated from /home/yudi/Documentos/COMP/Compilador/Compilador/IsiLang.g4 by ANTLR 4.9.2
+// Generated from c:\Users\georg\VSCodeProjects\compiladores\Projeto\Compilador\Compilador\IsiLang.g4 by ANTLR 4.9.2
 
 	import structures.*;
 	import exceptions.*;
@@ -166,6 +166,7 @@ public class IsiLangParser extends Parser {
 
 		public void generateCodes(){
 			program.generateJavaFile();
+			program.generatePythonFile();
 		}
 
 
