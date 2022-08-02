@@ -15,7 +15,8 @@ public class CmdDecisao extends AbstractCommand {
     }
 
     public CmdDecisao() {
-
+        listTrue = new ArrayList<AbstractCommand>();
+        listFalse = new ArrayList<AbstractCommand>();
     }
 
     public void setCondition(String condition) {
@@ -38,7 +39,7 @@ public class CmdDecisao extends AbstractCommand {
             str.append(cmd.genJavaCode(qntTabs + 1) + "\n");
         }
         str.append(toTabs(qntTabs) + "}");
-        if (listFalse.size() > 0) {
+        if (!listFalse.isEmpty()) {
             str.append(" else {\n");
             for (AbstractCommand cmd : listFalse) {
                 str.append(cmd.genJavaCode(qntTabs + 1) + "\n");

@@ -1,4 +1,4 @@
-// Generated from Compilador/IsiLang.g4 by ANTLR 4.10.1
+// Generated from IsiLang.g4 by ANTLR 4.10.1
 package parser;
 
 	import structures.*;
@@ -6,6 +6,7 @@ package parser;
 	import ast.*;
 	import java.util.ArrayList;
 	import java.util.Stack;
+	import java.util.HashMap;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -138,6 +139,18 @@ public class IsiLangBaseListener implements IsiLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmdwhile(IsiLangParser.CmdwhileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdSwitch(IsiLangParser.CmdSwitchContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdSwitch(IsiLangParser.CmdSwitchContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

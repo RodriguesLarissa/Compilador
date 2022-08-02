@@ -49,7 +49,7 @@ public class Program {
             finalFile.append(cmd.genPythonCode(0) + "\n");
         }
         try {
-            FileWriter fr = new FileWriter(new File("Teste.py"));
+            FileWriter fr = new FileWriter(new File("Main.py"));
             fr.write(finalFile.toString());
             fr.close();
         } catch (Exception ex) {

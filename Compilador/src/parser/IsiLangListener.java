@@ -1,4 +1,4 @@
-// Generated from Compilador/IsiLang.g4 by ANTLR 4.10.1
+// Generated from IsiLang.g4 by ANTLR 4.10.1
 package parser;
 
 	import structures.*;
@@ -6,6 +6,7 @@ package parser;
 	import ast.*;
 	import java.util.ArrayList;
 	import java.util.Stack;
+	import java.util.HashMap;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -114,6 +115,16 @@ public interface IsiLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmdwhile(IsiLangParser.CmdwhileContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link IsiLangParser#cmdSwitch}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdSwitch(IsiLangParser.CmdSwitchContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link IsiLangParser#cmdSwitch}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdSwitch(IsiLangParser.CmdSwitchContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link IsiLangParser#expr}.
 	 * @param ctx the parse tree

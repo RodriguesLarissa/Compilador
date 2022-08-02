@@ -10,8 +10,14 @@ declare int i.
 i := 1.
 
 leia(d).
+
 enquanto (d != 10,0) {
     se (d < 10,0) entao {
+        
+        se (d < 5,0) entao {
+            escreva("Está muito baixo!").
+        }
+        
         escreva("Acho que deveria ser mais!").
     } senao {
         escreva("Ai tambêm é muitoo... :)!").
@@ -23,7 +29,7 @@ enquanto (d != 10,0) {
 s := "Voce precisou de".
 escreva(s).
 escreva(i).
-se (i >= 1) entao {
+se (i == 1) entao {
     escreva("Tentativa").
 } senao {
     escreva("Tentativas").

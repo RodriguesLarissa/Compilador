@@ -6,6 +6,7 @@ grammar IsiLang;
 	import ast.*;
 	import java.util.ArrayList;
 	import java.util.Stack;
+	import java.util.HashMap;
 }
 
 @members {
@@ -22,10 +23,10 @@ grammar IsiLang;
 	private String _ID;
 	private String _exprContent;
 	private String _exprCondition;
-	private ArrayList<AbstractCommand> listTrue;
-	private ArrayList<AbstractCommand> listFalse;
-	private ArrayList<AbstractCommand> listWhile;
 
+
+	private ArrayList<AbstractCommand> switchCaseHelper;
+	private String _case;
 
 	public void verifyIdAlreadyDeclared() { 
 		if(variableTable.exists(_name)) { 
@@ -63,10 +64,23 @@ grammar IsiLang;
 		}
 	}
 
+	public void addCaseIfNotDeclared(CmdSwitchCase obj,String id, ArrayList<AbstractCommand> cmds) {
+		if (obj.existsCase(id)) {
+			throw new SemanticException("Case '" + id + "' already declared");
+		} else {
+			obj.addCase(id, cmds);
+		}
+	}
+
+	public void verifySwitchType() {
+		if (_type != Variable.INT && _type != Variable.STRING) {
+			throw new SemanticException("Only int or String are permitted on switch");
+		}
+	}
 	public void setValue() {		
 		v = variableTable.getVariable(_name);		
 		v.setValue(_value);
-	}
+	}	
 	
 
 	public void generateCodes(){
@@ -127,7 +141,8 @@ cmd:
 	| cmdexpr
 	| cmdif
 	| cmdwhile
-	| declara;
+	| declara
+	| cmdSwitch;
 
 declara:
 	'declare' tipo ID {
@@ -182,22 +197,36 @@ cmdexpr:
 cmdif:
 	'se' AP {_exprCondition = "";} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
 		} expr FP {CmdDecisao cmd = new CmdDecisao();cmd.setCondition(_exprCondition);} 'entao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
-		} (cmd)+ FC {listTrue = stack.pop();} (
+		} (cmd)+ FC {cmd.setListTrue(stack.pop());} (
 		'senao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
 			cmd
-		)+ FC {listFalse = stack.pop();}
-	)? {
-		cmd.setListTrue(listTrue);
-		cmd.setListFalse(listFalse);
-		stack.peek().add(cmd);};
+		)+ FC {cmd.setListFalse(stack.pop());}
+	)? {		stack.peek().add(cmd);};
 
 cmdwhile:
 	'enquanto' AP {_exprCondition = "";} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
 		} expr FP {CmdLoop cmd = new CmdLoop();cmd.setCondition(_exprCondition);} AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
-		} (cmd)+ FC {listWhile = stack.pop();
-		cmd.setCmds(listWhile);
+		} (cmd)+ FC {
+		cmd.setCmds(stack.pop());
 		stack.peek().add(cmd);
 		};
+//putCaseIfNotDeclared(obj, id, cmd) setDfls
+cmdSwitch:
+	'switch' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();verifySwitchType();_ID = _name;
+	CmdSwitchCase cmd = new CmdSwitchCase(_name);
+		} FP AC (
+		'case' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
+			NUM
+			| TEXT
+		) {_case = _input.LT(-1).getText();} ':' (cmd)+ {switchCaseHelper = stack.pop();} (
+			'break' END {switchCaseHelper.add(new CmdBreak());}
+		)? {addCaseIfNotDeclared(cmd, _case, switchCaseHelper);}
+	)+ (
+		'default' ':' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);}
+			(
+			cmd
+		)+ {cmd.setDfls(stack.pop());}
+	) FC {stack.peek().add(cmd);};
 
 expr: termo exprll;
 exprll: exprl exprll |;

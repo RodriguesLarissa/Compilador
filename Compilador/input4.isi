@@ -1,0 +1,54 @@
+programa
+
+
+declare String s.
+declare int d.
+
+escreva("Quanto deveria ser a nota desse compilador? 0,00 a 10,00").
+
+declare int i.
+i := 1.
+
+leia(d).
+enquanto (d != 10) {
+    switch (d) {
+        case 1:
+            escreva("1 é muito pouco").
+            escreva("Acho que deveria ser mais").            
+        case 2:
+            escreva("2 é muito pouco").
+            break.
+        case 3:
+            escreva("3 é muito pouco").
+        case 4:
+            escreva("4 é muito pouco"). 
+            break.
+        case 5:
+            escreva("5 é muito pouco").
+            break.
+        case 6:
+            escreva("6 é muito pouco").
+            
+        case 7:
+            escreva("7 é muito pouco").               
+        default:
+            se (d < 10) entao {
+                escreva("Acho que deveria ser mais").
+            } senao {
+                escreva("Infelizmente o limite é 10 :(").
+            }
+    }
+
+    leia(d).
+    i := i + 1.
+}
+s := "Voce precisou de".
+escreva(s).
+escreva(i).
+se (i == 1) entao {
+    escreva("Tentativa").
+} senao {
+    escreva("Tentativas").
+}
+
+fimprog.
