@@ -105,6 +105,7 @@ public class IsiLangLexer extends Lexer {
 		private String _value;
 		private VariableTable variableTable = new VariableTable();
 		private VariableTable initializedVariables = new VariableTable();
+		private VariableTable usedVariables = new VariableTable();
 		private Variable v;
 
 		private Program program = new Program();
@@ -142,6 +143,14 @@ public class IsiLangLexer extends Lexer {
 			}
 		}
 
+		
+
+		public void addUsedVariables() {
+			if(!usedVariables.exists(_name)) {
+				usedVariables.add(variableTable.getVariable(_name));
+			}
+		}
+
 		public void verifyIdDeclaration() {
 			verifyIdAlreadyDeclared();
 			v = new Variable(_name, _type, _value);
@@ -172,8 +181,18 @@ public class IsiLangLexer extends Lexer {
 			v.setValue(_value);
 		}	
 		
+		//Aqui
+		public void verifyNotUsedVariables() {
+			ArrayList<Variable> xs = variableTable.getAll();
+			for (Variable v : xs) {
+				if (!usedVariables.exists(v.getName())) {
+					System.out.println("WARNING: Variable '" + v.getName() + "' declared but not used");
+				}
+			}
+		}
 
 		public void generateCodes(){
+			verifyNotUsedVariables();
 			program.generateJavaFile();
 			program.generatePythonFile();
 		}

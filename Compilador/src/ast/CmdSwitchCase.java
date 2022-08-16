@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import javax.swing.AbstractAction;
-
 public class CmdSwitchCase extends AbstractCommand {
     private String id;
     private HashMap<String, ArrayList<AbstractCommand>> cases;

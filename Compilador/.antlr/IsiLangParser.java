@@ -114,6 +114,7 @@ public class IsiLangParser extends Parser {
 		private String _value;
 		private VariableTable variableTable = new VariableTable();
 		private VariableTable initializedVariables = new VariableTable();
+		private VariableTable usedVariables = new VariableTable();
 		private Variable v;
 
 		private Program program = new Program();
@@ -151,6 +152,14 @@ public class IsiLangParser extends Parser {
 			}
 		}
 
+		
+
+		public void addUsedVariables() {
+			if(!usedVariables.exists(_name)) {
+				usedVariables.add(variableTable.getVariable(_name));
+			}
+		}
+
 		public void verifyIdDeclaration() {
 			verifyIdAlreadyDeclared();
 			v = new Variable(_name, _type, _value);
@@ -181,8 +190,18 @@ public class IsiLangParser extends Parser {
 			v.setValue(_value);
 		}	
 		
+		//Aqui
+		public void verifyNotUsedVariables() {
+			ArrayList<Variable> xs = variableTable.getAll();
+			for (Variable v : xs) {
+				if (!usedVariables.exists(v.getName())) {
+					System.out.println("WARNING: Variable '" + v.getName() + "' declared but not used");
+				}
+			}
+		}
 
 		public void generateCodes(){
+			verifyNotUsedVariables();
 			program.generateJavaFile();
 			program.generatePythonFile();
 		}
@@ -590,7 +609,7 @@ public class IsiLangParser extends Parser {
 				{
 				setState(91);
 				match(ID);
-				 _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();_ID = _name;
+				 _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();addUsedVariables();_ID = _name;
 							
 				}
 				break;
@@ -936,7 +955,7 @@ public class IsiLangParser extends Parser {
 			match(AP);
 			setState(166);
 			match(ID);
-			 _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();verifySwitchType();_ID = _name;
+			 _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();verifySwitchType();addUsedVariables();_ID = _name;
 				CmdSwitchCase cmd = new CmdSwitchCase(_name);
 					
 			setState(168);
@@ -1346,7 +1365,7 @@ public class IsiLangParser extends Parser {
 				{
 				setState(233);
 				match(ID);
-				 _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+				 _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();addUsedVariables(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
 						
 				}
 				break;

@@ -3,7 +3,10 @@ programa
 
 declare String s.
 declare int d.
+declare int f.
+f := 4.
 
+declare String s2.
 escreva("Quanto deveria ser a nota desse compilador? 0,00 a 10,00").
 
 declare int i.

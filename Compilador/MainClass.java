@@ -5,8 +5,11 @@ public class MainClass {
 
       String  s;
       int  d;
+      int  f;
       int  i;
+      String  s2;
 
+      f = 4;
       System.out.println("Quanto deveria ser a nota desse compilador? 0,00 a 10,00");
       i = 1;
       d = scan.nextInt();

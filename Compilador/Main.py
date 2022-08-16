@@ -1,7 +1,10 @@
 s = None
 d = None
+f = None
 i = None
+s2 = None
 
+f = 4
 print("Quanto deveria ser a nota desse compilador? 0,00 a 10,00")
 i = 1
 d = int(input())
