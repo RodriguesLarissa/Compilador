@@ -48,7 +48,7 @@ public class IsiLangParser extends Parser {
 		return new String[] {
 			null, "'programa'", "'fimprog'", "'declare'", "','", "'int'", "'String'", 
 			"'double'", "'leia'", "'escreva'", "'se'", "'entao'", "'senao'", "'enquanto'", 
-			"'switch'", "'case'", "':'", "'break'", "'default'", null, null, null, 
+			"'escolha'", "'caso'", "':'", "'parar'", "'outro'", null, null, null, 
 			null, null, "'('", "')'", "'{'", "'}'", "'.'", null, "'+'", "'-'", "'*'", 
 			"'/'", "'%'", "':='"
 		};

@@ -13,11 +13,11 @@ null
 'entao'
 'senao'
 'enquanto'
-'switch'
-'case'
+'escolha'
+'caso'
 ':'
-'break'
-'default'
+'parar'
+'outro'
 null
 null
 null

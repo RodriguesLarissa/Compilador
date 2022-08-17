@@ -295,7 +295,7 @@ cmdwhile:
 		};
 
 cmdSwitch:
-	'switch' AP ID { 
+	'escolha' AP ID { 
 		_name = _input.LT(-1).getText();
 		_line = _input.LT(-1).getLine();
 		_charPos = _input.LT(-1).getCharPositionInLine();
@@ -305,7 +305,7 @@ cmdSwitch:
 		_ID = _name;
 		CmdSwitchCase cmd = new CmdSwitchCase(_name);
 		} FP AC (
-		'case' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
+		'caso' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
 			INT
 			| DOUBLE
 			| TEXT
@@ -314,14 +314,13 @@ cmdSwitch:
 			int lH = _input.LT(-1).getLine();
 			int cH = _input.LT(-1).getCharPositionInLine();
 			} ':' (cmd)+ {switchCaseHelper = stack.pop();} (
-			'break' END {switchCaseHelper.add(new CmdBreak());}
+			'parar' END {switchCaseHelper.add(new CmdBreak());}
 		)? {
 			_line = lH;
 			_charPos = cH;		
 			addCaseIfNotDeclared(cmd, _case, switchCaseHelper);}
 	)+ (
-		'default' ':' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);}
-			(
+		'outro' ':' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
 			cmd
 		)+ {cmd.setDfls(stack.pop());}
 	) FC {stack.peek().add(cmd);};
