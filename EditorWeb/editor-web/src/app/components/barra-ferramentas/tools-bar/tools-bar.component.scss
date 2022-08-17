@@ -4,14 +4,18 @@
   border-top: 1px solid $gray;
   border-bottom: 1px solid $gray;
   padding: 15px 0px;
-  i {
-    color: $white;
-    margin-left: 40px;
-    margin-right: 15px;
 
-    &:hover{
-      color: $gray;
-      cursor: pointer;
+  .icones{
+    margin-left: 40px;
+
+    i {
+      color: $white;
+      margin-right: 25px;
+
+      &:hover{
+        color: $gray;
+        cursor: pointer;
+      }
     }
   }
 }
