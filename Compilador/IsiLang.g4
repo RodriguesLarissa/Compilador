@@ -11,7 +11,10 @@ grammar IsiLang;
 
 @members {
 	private int _type;
+	private int _lastTypeExpr;
 	private String _name;
+	private int _line = 0;
+	private int _charPos = 0;
 	private String _value;
 	private VariableTable variableTable = new VariableTable();
 	private VariableTable initializedVariables = new VariableTable();
@@ -31,19 +34,19 @@ grammar IsiLang;
 
 	public void verifyIdAlreadyDeclared() { 
 		if(variableTable.exists(_name)) { 
-			throw new SemanticException("Variable '" + _name + "' already declared");
+			throw new SemanticException("Variable '" + _name + "' already declared"+ " (line: " + _line + ":" + (_charPos + 1)  + ")");
 		}
 	}
 
 	public void verifyIdNotDeclared() { 
 		if(!variableTable.exists(_name)) { 
-			throw new SemanticException("Variable '" + _name + "' not declared");
+			throw new SemanticException("Variable '" + _name + "' not declared" + " (line: " + _line + ":" + (_charPos + 1)  + ")");
 		}
 	}
 
 	public void verifyVariableNotInitialized() {
 		if(!initializedVariables.exists(_name)) {
-			throw new SemanticException("Variable '" + _name + "' not initialized");
+			throw new SemanticException("Variable '" + _name + "' not initialized" + " (line: " + _line + ":" + (_charPos + 1)  + ")");
 		}
 	}
 
@@ -69,29 +72,48 @@ grammar IsiLang;
 	
 	public void verifyIsStringAllowed() {
 		if (v.getType() != Variable.STRING) {
-			throw new SemanticException("Expected " + v.getTypeText() + " value, recieved String '" + _value + "'");
+			throw new SemanticException("Expected " + v.getTypeText() + " value, recieved String '" + _value + "'" + " (line: " + _line + ":" + (_charPos + 1)  + ")");
 		}
 	}
 
 	public void addCaseIfNotDeclared(CmdSwitchCase obj,String id, ArrayList<AbstractCommand> cmds) {
 		if (obj.existsCase(id)) {
-			throw new SemanticException("Case '" + id + "' already declared");
+			throw new SemanticException("Case '" + id + "' already declared" + " (line: " + _line + ":" + (_charPos + 1)  + ")");
 		} else {
 			obj.addCase(id, cmds);
 		}
 	}
 
 	public void verifySwitchType() {
-		if (_type != Variable.INT && _type != Variable.STRING) {
-			throw new SemanticException("Only int or String are permitted on switch");
+		int tipo = variableTable.getVariable(_name).getType();
+		if (tipo != Variable.INT && tipo != Variable.STRING) {
+			throw new SemanticException("Only int or String are permitted on switch"+ " (line: " + _line + ":" + (_charPos + 1)  + ")");
 		}
 	}
+
+	public void verifyExprType(int LT) {
+		
+		int lastVType;
+		if (LT == -1) {
+			lastVType = variableTable.getVariable(_name).getType();
+		} else {
+			lastVType = LT;
+		}
+		
+		if (_lastTypeExpr == -1) {
+			_lastTypeExpr = lastVType;
+		} else if (_lastTypeExpr != lastVType) {
+			throw new SemanticException("Incompatible Types" + " (line: " + _line + ":" + (_charPos + 1)  + ")");
+		}
+	}
+
+	
 	public void setValue() {		
 		v = variableTable.getVariable(_name);		
 		v.setValue(_value);
 	}	
 	
-	//Aqui
+	
 	public void verifyNotUsedVariables() {
 		ArrayList<Variable> xs = variableTable.getAll();
 		for (Variable v : xs) {
@@ -112,7 +134,9 @@ grammar IsiLang;
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
 COMMENT: (('//' (.)*? '\n') | ('/**' (.)*? '*/')) -> skip;
 ID: ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9])*;
-NUM: [0-9]+ (',' [0-9]+)?;
+INT: [0-9]+;
+DOUBLE: [0-9]+ (',' [0-9]+);
+// NUM: INT | DOUBLE; NUM: [0-9]+ (',' [0-9]+)?;
 
 AP: '(';
 FP: ')';
@@ -167,11 +191,15 @@ declara:
 	'declare' tipo ID {
 	_name = _input.LT(-1).getText();
 	_value = null;
+	_line = _input.LT(-1).getLine();
+	_charPos = _input.LT(-1).getCharPositionInLine();
 	verifyIdDeclaration();
 } (
 		',' ID {
 	_name = _input.LT(-1).getText();
 	_value = null;
+	_line = _input.LT(-1).getLine();
+	_charPos = _input.LT(-1).getCharPositionInLine();
 	verifyIdDeclaration();
 }
 	)* END;
@@ -182,8 +210,15 @@ tipo:
 	| 'double' {_type = Variable.DOUBLE;};
 
 cmdleitura:
-	'leia' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();_ID = _name;
+	'leia' AP ID { 
+		_name = _input.LT(-1).getText();
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine();
+		verifyIdNotDeclared();
+		_ID = _name;
 		} FP END {
+		_name = _ID;
+		initializeVariable();
 		Variable v = (Variable)variableTable.getVariable(_ID);
 		CmdLeitura cmd = new CmdLeitura(_ID, v);
 		stack.peek().add(cmd);
@@ -191,8 +226,19 @@ cmdleitura:
 
 cmdescrita:
 	'escreva' AP (
-		TEXT {_ID = _input.LT(-1).getText();verifyIdNotDeclared();}
-		| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();addUsedVariables();_ID = _name;
+		TEXT {
+			_ID = _input.LT(-1).getText();
+			_line = _input.LT(-1).getLine();
+			_charPos = _input.LT(-1).getCharPositionInLine();
+			verifyIdNotDeclared();
+			}
+		| ID { 
+			_name = _input.LT(-1).getText();
+			_line = _input.LT(-1).getLine();
+			_charPos = _input.LT(-1).getCharPositionInLine();
+			verifyIdNotDeclared();
+			verifyVariableNotInitialized();
+			addUsedVariables();_ID = _name;
 			}
 	) FP END {		
 		CmdEscrita cmd = new CmdEscrita(_ID);
@@ -200,22 +246,39 @@ cmdescrita:
 	};
 
 cmdexpr:
-	ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();_ID = _name;
+	ID { 
+		_name = _input.LT(-1).getText();
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine();
+		verifyIdNotDeclared();
+		_ID = _name;
 		} ATR {
 		_exprContent = "";
 		} (
-		expr
-		| TEXT {
-			_value = _input.LT(-1).getText(); setValue(); verifyIsStringAllowed();_exprContent = _value;
+		{_lastTypeExpr = -1;} expr
+		| {_lastTypeExpr = -1;} TEXT {
+			_value = _input.LT(-1).getText();
+			_line = _input.LT(-1).getLine();
+			_charPos = _input.LT(-1).getCharPositionInLine();
+			setValue(); 
+			verifyIsStringAllowed();			
+			verifyExprType(Variable.STRING);
+			_exprContent = _value;
 			}
-	) END {		
+	) END {
+		_name = _ID;
+		initializeVariable();
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine() - 1;
+		verifyExprType(-1);
 		CmdAtr cmd = new CmdAtr(_ID, _exprContent);
 		stack.peek().add(cmd);
 	};
 
 cmdif:
-	'se' AP {_exprCondition = "";} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
-		} expr FP {CmdDecisao cmd = new CmdDecisao();cmd.setCondition(_exprCondition);} 'entao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
+	'se' AP {_exprCondition = "";_lastTypeExpr = -1;} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
+		_lastTypeExpr = -1;} expr FP {CmdDecisao cmd = new CmdDecisao();cmd.setCondition(_exprCondition);
+		} 'entao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
 		} (cmd)+ FC {cmd.setListTrue(stack.pop());} (
 		'senao' AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
 			cmd
@@ -223,23 +286,39 @@ cmdif:
 	)? {		stack.peek().add(cmd);};
 
 cmdwhile:
-	'enquanto' AP {_exprCondition = "";} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
-		} expr FP {CmdLoop cmd = new CmdLoop();cmd.setCondition(_exprCondition);} AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
+	'enquanto' AP {_exprCondition = "";_lastTypeExpr = -1;} expr OP_REL {_exprCondition += " " + _input.LT(-1).getText() + " ";
+		_lastTypeExpr = -1;} expr FP {CmdLoop cmd = new CmdLoop();cmd.setCondition(_exprCondition);
+		} AC {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);
 		} (cmd)+ FC {
 		cmd.setCmds(stack.pop());
 		stack.peek().add(cmd);
 		};
-//putCaseIfNotDeclared(obj, id, cmd) setDfls
+
 cmdSwitch:
-	'switch' AP ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();initializeVariable();verifySwitchType();addUsedVariables();_ID = _name;
-	CmdSwitchCase cmd = new CmdSwitchCase(_name);
+	'switch' AP ID { 
+		_name = _input.LT(-1).getText();
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine();
+		verifyIdNotDeclared();
+		verifySwitchType();
+		addUsedVariables();
+		_ID = _name;
+		CmdSwitchCase cmd = new CmdSwitchCase(_name);
 		} FP AC (
 		'case' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);} (
-			NUM
+			INT
+			| DOUBLE
 			| TEXT
-		) {_case = _input.LT(-1).getText();} ':' (cmd)+ {switchCaseHelper = stack.pop();} (
+		) {
+			_case = _input.LT(-1).getText();
+			int lH = _input.LT(-1).getLine();
+			int cH = _input.LT(-1).getCharPositionInLine();
+			} ':' (cmd)+ {switchCaseHelper = stack.pop();} (
 			'break' END {switchCaseHelper.add(new CmdBreak());}
-		)? {addCaseIfNotDeclared(cmd, _case, switchCaseHelper);}
+		)? {
+			_line = lH;
+			_charPos = cH;		
+			addCaseIfNotDeclared(cmd, _case, switchCaseHelper);}
 	)+ (
 		'default' ':' {currentThread = new ArrayList<AbstractCommand>();stack.push(currentThread);}
 			(
@@ -256,13 +335,38 @@ termo: fator termoll;
 termoll: termol termoll |;
 termol: (VEZES | DIVIDIDO | MOD) { _exprContent += " " + _input.LT(-1).getText() + " "; _exprCondition += " " + _input.LT(-1).getText() + " ";
 		} fator;
+
 fator:
-	NUM {
-		_exprContent += _input.LT(-1).getText().replace(',', '.'); _exprCondition += _input.LT(-1).getText().replace(',', '.');
+	INT { 
+		_exprContent += _input.LT(-1).getText(); 
+		_exprCondition += _input.LT(-1).getText();
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine();
+		verifyExprType(Variable.INT); 
 		}
-	| ID { _name = _input.LT(-1).getText();verifyIdNotDeclared();verifyVariableNotInitialized();addUsedVariables(); _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+	| DOUBLE { 
+		_exprContent += _input.LT(-1).getText().replace(',', '.'); 
+		_exprCondition += _input.LT(-1).getText().replace(',', '.');
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine();
+		verifyExprType(Variable.DOUBLE);
 		}
-	| AP { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
-		} expr FP { _exprContent += _input.LT(-1).getText(); _exprCondition += _input.LT(-1).getText();
+	| ID { 
+		_name = _input.LT(-1).getText();
+		_line = _input.LT(-1).getLine();
+		_charPos = _input.LT(-1).getCharPositionInLine();
+		verifyIdNotDeclared();
+		verifyVariableNotInitialized();
+		addUsedVariables();		
+		verifyExprType(-1);		
+ 		_exprContent += _input.LT(-1).getText(); 
+		_exprCondition += _input.LT(-1).getText(); 
+		}
+	| AP {
+ 		_exprContent += _input.LT(-1).getText(); 
+		_exprCondition += _input.LT(-1).getText(); 
+		} expr FP {
+ 		_exprContent += _input.LT(-1).getText(); 
+		_exprCondition += _input.LT(-1).getText(); 
 		};
 

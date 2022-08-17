@@ -3,14 +3,14 @@ programa
 
 declare String s.
 declare int d.
-declare int f.
-f := 4.
-
+declare double f.
+f := 4,0 + 4,0.
 declare String s2.
 escreva("Quanto deveria ser a nota desse compilador? 0,00 a 10,00").
 
 declare int i.
 i := 1.
+
 
 leia(d).
 enquanto (d != 10) {
@@ -46,6 +46,7 @@ enquanto (d != 10) {
     i := i + 1.
 }
 s := "Voce precisou de".
+//s := 10.
 escreva(s).
 escreva(i).
 se (i == 1) entao {
