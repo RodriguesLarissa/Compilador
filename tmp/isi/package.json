@@ -1,0 +1,25 @@
+{
+  "name": "isi",
+  "displayName": "Isi",
+  "description": "Isi Language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "isi",
+      "aliases": ["Isi Language", "isi"],
+      "extensions": [".isi"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "isi",
+      "scopeName": "source.isi",
+      "path": "./syntaxes/isi.tmLanguage.json"
+    }]
+  }
+}

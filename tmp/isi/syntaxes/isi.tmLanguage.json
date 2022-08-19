@@ -1,0 +1,86 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Isi Language",
+	"patterns": [
+		{
+			"include": "#operators"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#reserved-words"
+		},
+		{
+			"include": "#input-output-statements"
+		},
+		{
+			"include": "#types"
+		}
+	],
+	"repository": {
+		"reserved-words": {
+			"patterns": [
+				{
+					"name": "keyword.control",
+					"match": "\\b(programa|fimprog|declare|se|entao|senao|enquanto|escolha|caso|parar|outro)\\b"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"name": "constant.numeric.isi",
+					"match": "\\b-?[0-9]+(,?[0-9]+)?\\b"
+				}
+			]
+		},
+		"input-output-statements": {
+			"patterns": [
+				{
+					"name": "support.function",
+					"match": "\\b(leia|escreva)\\b"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.isi",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.isi",
+					"match": "\\\\."
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"name": "keyword.operator.isi",
+					"match": "%|\\*|/|-|\\+"
+				},
+				{
+					"name": "keyword.operator.comparison.isi",
+					"match": "!=|<=|>=|==|<|>"
+				},
+				{
+					"name": "keyword.operator.assignment.isi",
+					"match": ":="
+				}
+			]
+		},
+		"types": {
+			"patterns": [
+				{
+					"name": "support.type.isi",
+					"match": "\\b(int|String|double)\\b"
+				}
+			]
+		}
+	},
+	"scopeName": "source.isi"
+}
