@@ -1,0 +1,26 @@
+@import "../../styles/variables.scss";
+
+.tools-bar {
+  padding-top: 15px;
+  height: 93vh;
+
+  .icones{
+    margin: 0px 20px;
+    display: flex;
+    flex-direction: column;
+
+    i {
+      color: $white;
+      margin-bottom: 25px;
+
+      &:hover{
+        color: $gray;
+        cursor: pointer;
+      }
+    }
+
+    #file-upload {
+      display: none;
+    }
+  }
+}
