@@ -3,38 +3,38 @@ programa
 
 declare String s.
 declare int d.
-declare int f.
-f := 4.
-
+declare double f.
+f := 4,0 + 4,0.
 declare String s2.
 escreva("Quanto deveria ser a nota desse compilador? 0,00 a 10,00").
 
 declare int i.
 i := 1.
 
+
 leia(d).
 enquanto (d != 10) {
-    switch (d) {
-        case 1:
+    escolha (d) {
+        caso 1:
             escreva("1 é muito pouco").
             escreva("Acho que deveria ser mais").            
-        case 2:
+        caso 2:
             escreva("2 é muito pouco").
-            break.
-        case 3:
+            parar.
+        caso 3:
             escreva("3 é muito pouco").
-        case 4:
+        caso 4:
             escreva("4 é muito pouco"). 
-            break.
-        case 5:
+            parar.
+        caso 5:
             escreva("5 é muito pouco").
-            break.
-        case 6:
+            parar.
+        caso 6:
             escreva("6 é muito pouco").
             
-        case 7:
+        caso 7:
             escreva("7 é muito pouco").               
-        default:
+        outro:
             se (d < 10) entao {
                 escreva("Acho que deveria ser mais").
             } senao {
@@ -46,6 +46,7 @@ enquanto (d != 10) {
     i := i + 1.
 }
 s := "Voce precisou de".
+//s := 10.
 escreva(s).
 escreva(i).
 se (i == 1) entao {
