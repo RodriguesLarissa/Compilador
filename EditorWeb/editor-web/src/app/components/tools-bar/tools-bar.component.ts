@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FileUploadService } from './../../services/file-upload.service';
 
 @Component({
@@ -9,6 +9,8 @@ import { FileUploadService } from './../../services/file-upload.service';
 export class ToolsBarComponent implements OnInit {
 
   file: File;
+
+  @Output() code = new EventEmitter<any>();
 
   constructor(private fileUploadService: FileUploadService) { }
 
@@ -22,7 +24,7 @@ export class ToolsBarComponent implements OnInit {
     this.fileUploadService.upload(this.file).subscribe(
       (_) => {
         fileReader.onload = (_) => {
-          console.log(fileReader.result);
+          this.code.emit(fileReader.result);
         }
         fileReader.readAsText(this.file);
       }

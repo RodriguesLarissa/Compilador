@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class MainPageComponent {
   title = 'editor-web';
+
+  code: string = '//Digite seu codigo aqui ou abra um arquivo';
 }

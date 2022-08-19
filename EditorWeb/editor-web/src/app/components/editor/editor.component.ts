@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'editor',
@@ -8,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class EditorComponent implements OnInit {
 
   editorOptions = {theme: 'vs-dark', language: 'javascript', minimap: { enabled: false }};
-  code: string= '//Digite seu codigo aqui ou abra um arquivo';
+
+  @Input() code: string;
 
   constructor() { }
 

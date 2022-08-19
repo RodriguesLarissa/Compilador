@@ -1,4 +1,8 @@
 <div class="main-page">
-  <tools-bar></tools-bar>
-  <editor></editor>
+  <tools-bar
+    (code)="code = $event"
+  ></tools-bar>
+  <editor
+    [code]="code"
+  ></editor>
 </div>
