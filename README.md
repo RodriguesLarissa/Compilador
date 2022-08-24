@@ -36,4 +36,4 @@ Lucas Yudi Fukazawa Cassin        11201812210<br />
 </ul>
 
 # Link para o vídeo do Youtube
-<a href="https://www.youtube.com/">Clique aqui para assistir ao nosso vídeo</a>
+<a href="https://youtu.be/42QYsC5ETvM">Clique aqui para assistir ao nosso vídeo</a>
