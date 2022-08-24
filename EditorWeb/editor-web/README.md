@@ -1,27 +1,19 @@
-# EditorWeb
+# Editor Web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.2.
+## Instalação do Angular
 
-## Development server
+Requisitos: Possuir Node.js e npm instalados na máquina.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Instale o pacote do Angular CLI com o seguinte comando no terminal:
 
-## Code scaffolding
+```
+npm install -g @angular/cli
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Como inicializar
 
-## Build
+Acessar a pasta do editor web.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Realizar as instalações dos pacotes do npm: `npm i`
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Em seguida, realize o comando: `ng serve`. Em seguida, vá para a url `http://localhost:4200/` para visualizar o editor web.
